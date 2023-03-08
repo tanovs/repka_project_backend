@@ -1,0 +1,137 @@
+@startuml
+
+!define primary_key(x) <b><color:#b8861b><&key></color> x</b>
+!define foreign_key(x) <color:#aaaaaa><&key></color> x
+!define column(x) <color:#efefef><&media-record></color> x
+!define table(x) entity x << (T, white) >>
+
+table( suppliers ) {
+    /'таблица Поставщик'/
+    primary_key( id ): UUID
+    column( company_name ): TEXT
+    column( contact_person_name ): TEXT
+    column( address ): TEXT
+    column(phone_number): TEXT
+    column( email ): TEXT
+    column( web_site ): TEXT
+    column( work_hours ): TEXT
+    column( min_order_price ): DECIMAL
+    column( delivery_time_days ): DECIMAL /'срок доставки, дни'/
+    column( ooo ): TEXT /'ООО / ИП'/
+    column( ogrn ): TEXT /'ОГРН'/
+    column( bank_account ): TEXT /'расчетный счет'/
+    column( inn ): TEXT /'ИНН'/
+    column( profile_photo ): bytea /'фото профиля'/
+}
+
+table( supplier_delivery_area ) {
+    /'Города доставки поставщика'/
+    primary_key( id ): UUID 
+    column( city ): TEXT
+    column( area ): TEXT
+    foreign_key( supplier_id ): UUID <<FK>> 
+}
+
+table( supplier_certs ) {
+    /'Сертификаты поставщика'/
+    primary_key( id ): UUID 
+    column( certificate ): bytea /'сертификат'/
+    foreign_key( supplier_id ): UUID <<FK>> /'FK поставщик'/
+}
+
+table( supplier_goods ) {
+    /'Товары поставщика'/
+    primary_key( id ): UUID 
+    column( name ): TEXT
+    column( price ): DECIMAL
+    column( volume ): INT8 /'объем, мл '/
+    column( rest ): INT8 /'остаток, шт. '/
+    column( goods_photo ): bytea /'фото товара'/
+    foreign_key( category_id ): UUID <<FK>> /'FK категория товара'/
+    foreign_key( supplier_id ): UUID <<FK>> /'FK поставщик'/
+}
+
+table( goods_categories ) {
+    /'Категории товаров'/
+    primary_key( id ): UUID 
+    column( name ): TEXT
+}
+
+table( goods_tags ) {
+    /'Теги категорий товаров'/
+    primary_key( id ): UUID 
+    column( name ): TEXT
+    foreign_key( category_id ): UUID <<FK>> /'FK категория'/
+}
+
+table( horeca ) {
+    /'Представители хорека'/
+    primary_key( id ): UUID 
+    column( name ): TEXT
+    column( ooo ): TEXT
+    column( inn ): TEXT
+    column( account_number ): TEXT
+    column( requisites ): TEXT
+    column( bank ): TEXT
+
+}
+
+table( horeca_branches ) {
+    /'Филиалы ресторанов'/
+    primary_key( id ): UUID 
+    column( name ): TEXT
+    column( address ): TEXT
+    column( manager_name ): TEXT
+    column( manager_phone ): TEXT
+    foreign_key( horeca_id ): UUID <<FK>> /'FK хорека'/
+}
+
+table( horeca_order_history ) {
+    /'История заказов хорека'/
+    primary_key( id ): UUID
+    column( comment ): TEXT
+    column( delivery_day ): DATE
+    column( delivery_time_plan ): DATETIME
+    column( delivery_time_fact ): DATETIME
+    column( goods_ids ): UUID ARRAY /'массив товаров в заказе'/
+    column( goods_prices ): DECIMAL ARRAY /'массив цен на товары в заказе'/
+    column( total_price ): DECIMAL 
+    column( is_demo ): BOOL /'признак заказано как образец?'/
+    column( is_phys_lico ): BOOL /'признак оплатить как физлицо'/
+    column( create_datetime ): DATETIME
+    column( modify_datetime ): DATETIME
+    foreign_key( horeca_id ): UUID <<FK>> /'FK хорека'/
+    foreign_key( order_type ): UUID <<FK>> /'FK тип заказа'/
+    /'foreign_key( supply_good_id ): UUID <<FK>> /'FK товар'/'/
+}
+
+table( order_types ) {
+    /'Представители хорека'/
+    primary_key( id ): UUID 
+    column( name ): TEXT  /'тип заказа'/
+}
+
+
+suppliers ||--|{ supplier_delivery_area
+suppliers ||--|{ supplier_certs
+suppliers ||--|{ supplier_goods
+
+/'может ли товар быть больше чем в 1 категории?'/
+supplier_goods ||--|| goods_categories
+goods_categories ||--|{ goods_tags
+
+horeca ||--|{ horeca_branches
+
+/'как свяжем заказ хореки с продуктами?'/
+horeca ||--o{ horeca_order_history
+horeca_order_history ||--|| order_types
+
+
+/'
+примеры связей:
+    Zero or One	|o--
+    Exactly One	||--
+    Zero or Many }o--
+    One or Many	}|--
+'/
+@enduml
