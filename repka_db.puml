@@ -18,7 +18,7 @@ table( suppliers ){
     foreign_key( social_network_id ): UUID <<FK>> /'социальные сети поставщика'/
     column( delivery_min_price ): INTEGER /'минимальная цена товара'/
     column( estimate_delivery_time ): datetime /'предполагаемое время доставки'/
-    foreign_key( city_tags_id ): UUID <<FK>> /'города доставки'/
+    /'foreign_key( city_tags_id ): UUID <<FK>> /'города доставки'/'/
     foreign_key( day_tags_id ): UUID <<FK>> /'дни доставки (пн, вт, ср и тд)'/
     foreign_key( time_tags_id ): UUID /'время доставки'/
     foreign_key( day_tags_id ): UUID <<FK>> /'дни приема заявок (пн, вт, ср и тд)'/
@@ -53,6 +53,12 @@ table( city_tags ){
     column( city ): TEXT
 }
 
+table( suppliers_city_tags ){
+    primary_key( id ): UUID
+    foreign_key( supplier_id ): UUID
+    foreign_key( city_tag_id ): UUID
+}
+
 table( time_tags ){
     /'Таблица тегов диапазонов времени'/
     primary_key( id ): UUID
@@ -68,7 +74,7 @@ table( supplier_cert ){
 table( good ){
     /'Таблица товаров'/
     primary_key( id ): UUID
-    foreign_key( good_tag_id ): UUID <<FK>>
+    /'foreign_key( good_tag_id ): UUID <<FK>>'/
     column( photo ): TEXT /'Путь до фотографии с товаром'/
     column( price ): INTEGER /'Цена за единицу'/
     column( volume ): INTEGER  /'Объем'/
@@ -85,6 +91,12 @@ table( good_tag ){
     column( good_category ): TEXT /'Название категории товара'/
 }
 
+table( good_good_tag ){
+    primary_key( id ): UUID
+    foreign_key( good_id ): UUID <<FK>>
+    foreign_key( good_tag_id ): UUID <<FK>>
+}
+
 table( horeca ){
     primary_key( id ): UUID
     column( login ): TEXT /'Логин хореки'/
@@ -98,7 +110,14 @@ table( horeca ){
     column( ooo ): TEXT /'ООО ИП хореки'/
     column( inn ): TEXT /'ИНН хореки'/
     column( banck_account ): TEXT /'Расчетный счет хореки'/
-    foreign_key( horeca_basket ): UUID <<FK>> /'Корзина хореки'/
+    /'foreign_key( horeca_basket_id ): UUID <<FK>> /'Корзина хореки'/'/
+}
+
+table( restaurant ){
+    primary_key( id ): UUID
+    column( restaurant_name ): TEXT
+    column( restaurant_theme ): TEXT
+    column( adress ): TEXT
 }
 
 table( horeca_basket ){
@@ -107,36 +126,31 @@ table( horeca_basket ){
     foreign_key( good_id ): UUID <<FK>>
 }
 
-table( restaurant ){
-    primary_key( id ): UUID
-    column( restaurant_name ): TEXTcolumn( restaurant_theme ): TEXT
-    column( adress ): TEXT
-}
-
 table( horeca_application ){
     primary_key( id ): UUID
     foreign_key( horeca_id ): UUID <<FK>>
     foreign_key( good_id ): UUID <<FK>>
 }
 
-suppliers ||--o{ social_network
+suppliers |o--o{ social_network
 suppliers ||--o{ day_tags
-suppliers ||--o{ city_tags
 suppliers ||--o{ time_tags
 suppliers ||--o{ supplier_cert
-suppliers ||--o{ good
-suppliers ||--o{ horeca_applicaton
+suppliers }o--o{ horeca_application
 
-good ||--o{ good_tag
+suppliers_city_tags }o--o{ city_tags
+suppliers_city_tags }o--o{ suppliers
 
-horeca ||--o{ restaurant
-horeca ||--o{ good
-horeca ||--o{ horeca_basket
+good_good_tag }o--o{ good_tag
+good_good_tag }o--o{ good
 
-horeca_basket ||--o{ good
-horeca_basket ||--o{ horeca
+horeca |o--|{ restaurant
+horeca |o--o{ good
 
-horeca_application ||--o{ good
-horeca_application ||--o{ horeca
+horeca_basket }|--|{ horeca
+horeca_basket }|--|{ good
+
+horeca_application }|--|{ horeca
+horeca_application }|--|{ good
 
 @enduml
