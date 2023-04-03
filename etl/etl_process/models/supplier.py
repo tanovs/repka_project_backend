@@ -1,5 +1,7 @@
+from etl_process.models.association_tables import (HorecaFavourite,
+                                                   SupplierCityTag,
+                                                   SupplierRegionTag)
 from etl_process.models.mixin import Base, TimeStampMixin, UUIDMixin
-from etl_process.models.tags import SupplierCityTag, SupplierRegionTag
 from sqlalchemy import BINARY, INTEGER, TEXT, Column, ForeignKey
 from sqlalchemy.orm import relationship
 
@@ -43,6 +45,11 @@ class Supplier(Base, UUIDMixin, TimeStampMixin):
     region_tags = relationship(
         'RegionTag',
         secondary=SupplierRegionTag,
+        back_populates='suppliers',
+    )
+    horecas = relationship(
+        'Horeca',
+        secondary=HorecaFavourite,
         back_populates='suppliers',
     )
     certificates = relationship('SupplierCert')

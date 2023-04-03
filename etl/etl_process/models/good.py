@@ -1,3 +1,4 @@
+from etl_process.models.association_tables import HorecaBasket
 from etl_process.models.mixin import Base, TimeStampMixin, UUIDMixin
 from sqlalchemy import BINARY, INTEGER, Column, ForeignKey
 from sqlalchemy.orm import relationship
@@ -18,3 +19,9 @@ class Good(Base, UUIDMixin, TimeStampMixin):
     supplier_id = Column('supplier_id', ForeignKey('supplier.id'))
     good_category = relationship('GoodCategory', uselist=False)
     good_tag = relationship('GoodTag', uselist=False)
+
+    horecas = relationship(
+        'Good',
+        secondary=HorecaBasket,
+        back_populates='goods',
+    )

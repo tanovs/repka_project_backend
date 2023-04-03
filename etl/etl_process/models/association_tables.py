@@ -22,3 +22,33 @@ class SupplierRegionTag(Base, UUIDMixin):
         ForeignKey('region_tag.id'),
         primary_key=True,
     )
+
+
+class HorecaFavourite(Base, UUIDMixin):
+    __tablename__ = 'horeca_favourite'
+
+    horeca_id = Column(
+        'horeca_id',
+        ForeignKey('horeca.id'),
+        primary_key=True,
+    )
+    supplier_id = Column(
+        'supplier_id',
+        ForeignKey('supplier.id'),
+        primary_key=True,
+    )
+
+
+class HorecaBasket(Base, UUIDMixin):
+    __tablename__ = 'horeca_favourite'
+
+    horeca_id = Column(
+        'horeca_id',
+        ForeignKey('horeca.id'),
+        primary_key=True,
+    )
+    good_id = Column(
+        'good_id',
+        ForeignKey('good.id'),
+        primary_key=True,
+    )
