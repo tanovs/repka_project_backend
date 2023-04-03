@@ -24,7 +24,7 @@ class SupplierRegionTag(Base, UUIDMixin):
     )
 
 
-class HorecaFavourite(Base, UUIDMixin):
+class HorecaFavourite(UUIDMixin):
     __tablename__ = 'horeca_favourite'
 
     horeca_id = Column(

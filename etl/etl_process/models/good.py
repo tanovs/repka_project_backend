@@ -6,6 +6,7 @@ from sqlalchemy.orm import relationship
 
 class Good(Base, UUIDMixin, TimeStampMixin):
     __tablename__ = 'good'
+    __dialect__ = 'postgresql'
 
     photo = Column('photo', BINARY)
     price = Column('price', INTEGER, nullable=False)
