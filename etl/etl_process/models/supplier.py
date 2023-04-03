@@ -45,7 +45,8 @@ class Supplier(Base, UUIDMixin, TimeStampMixin):
         secondary=SupplierRegionTag,
         back_populates='suppliers',
     )
-    certificate = relationship('SupplierCert')
+    certificates = relationship('SupplierCert')
+    goods = relationship('Good')
 
 
 class SupplierCert(Base, UUIDMixin, TimeStampMixin):
