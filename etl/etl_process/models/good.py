@@ -1,5 +1,6 @@
 from etl_process.models.mixin import Base, TimeStampMixin, UUIDMixin
 from sqlalchemy import BINARY, INTEGER, Column, ForeignKey
+from sqlalchemy.orm import relationship
 
 
 class Good(Base, UUIDMixin, TimeStampMixin):
@@ -15,3 +16,5 @@ class Good(Base, UUIDMixin, TimeStampMixin):
     carbohydrates = Column('carbohydrates', INTEGER, nullable=False)
 
     supplier_id = Column('supplier_id', ForeignKey('supplier.id'))
+    good_category = relationship('GoodCategory', uselist=False)
+    good_tag = relationship('GoodTag', uselist=False)

@@ -1,6 +1,6 @@
 from etl_process.models.mixin import Base, TimeStampMixin, UUIDMixin
 from etl_process.models.tags import SupplierCityTag, SupplierRegionTag
-from sqlalchemy import BINARY, INTEGER, TEXT, UUID, Column, ForeignKey
+from sqlalchemy import BINARY, INTEGER, TEXT, Column, ForeignKey
 from sqlalchemy.orm import relationship
 
 
@@ -54,4 +54,4 @@ class SupplierCert(Base, UUIDMixin, TimeStampMixin):
 
     certificate = Column('certificate', BINARY, nullable=False)
     certificate_url = Column('certificate_url', TEXT)
-    supplier_id = Column(UUID, ForeignKey('supplier.id'))
+    supplier_id = Column('supplier_id', ForeignKey('supplier.id'))

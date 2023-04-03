@@ -31,6 +31,8 @@ class CategoryTag(Base, UUIDMixin, TimeStampMixin):
     __tablename__ = 'category_tag'
 
     category = Column('category', TEXT, nullable=False)
+    good_id = Column('good_id', ForeignKey('good.id'))
+
     category_tags = relationship('GoodTag')
 
 
@@ -38,4 +40,6 @@ class GoodTag(Base, UUIDMixin, TimeStampMixin):
     __tablename__ = 'good_tag'
 
     good_tag = Column('good_tag', TEXT, nullable=False)
+    good_id = Column('good_id', ForeignKey('good.id'))
+
     category_tag_id = Column('category_tag_id', ForeignKey('category_tag.id'))
