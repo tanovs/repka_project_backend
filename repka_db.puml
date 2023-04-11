@@ -1,4 +1,4 @@
-@startuml
+@startuml Repka DB
 !define primary_key(x) <b><color:#b8861b><&key></color> x</b>
 !define foreign_key(x) <color:#aaaaaa><&key></color> x
 !define column(x) <color:#efefef><&media-record></color> x
@@ -15,7 +15,7 @@ table( suppliers ){
     column( email ): TEXT /'почта поставщика'/
     column( site ): TEXT /'сайт поставщика'/
     column( social_network ): TEXT /'социальные сети поставщика'/
-    column( delivery_min_price ): INTEGER /'минимальная цена товара'/
+    column( delivery_min_price ): NUMERIC /'минимальная цена товара'/
     column( estimate_delivery_time_from ): datetime /'предполагаемое время доставки от'/
     column( estimate_delivery_time_to ): datetime /'предполагаемое время доставки до'/
     column( delivery_day ): TEXT /'дни доставки (пн, вт, ср и тд)'/
@@ -59,14 +59,14 @@ table( supplier_cert ){
     primary_key( id ): UUID
     column( certificate ): bytea
     column( certificate_url): TEXT
-    column( suppliers_id ): UUID <<FK>>
+    foreign_key( supplier_id ): UUID <<FK>>
 }
 
 table( good ){
     /'Таблица товаров'/
     primary_key( id ): UUID
     column( photo ): TEXT /'Путь до фотографии с товаром'/
-    column( price ): INTEGER /'Цена за единицу'/
+    column( price ): NUMERIC /'Цена за единицу'/
     column( volume ): INTEGER  /'Объем'/
     column( balance ): INTEGER /'Остаток'/
     column( calories ): INTEGER /'Калории'/
@@ -74,7 +74,7 @@ table( good ){
     column( fats ): INTEGER /'Жиры'/
     column( carbohydrates ): INTEGER /'Углеводы'/
     foreign_key( category_tag_id ): UUID <<FK>>
-    foreign_key( suppliers_id ): UUID <<FK>>
+    foreign_key( supplier_id ): UUID <<FK>>
 }
 
 table( good_tag ){
@@ -97,17 +97,15 @@ table( horeca ){
     column( company_name ): TEXT /'Название компании хореки'/
     column( phone_number ): TEXT /'Номер телефона хореки'/
     column( email ): TEXT /'имейл хореки'/
-    foreign_key( restaurant_id ): UUID <<FK>> /'Рестораны хореки'/
     column( ooo ): TEXT /'ООО ИП хореки'/
     column( inn ): TEXT /'ИНН хореки'/
-    column( banck_account ): TEXT /'Расчетный счет хореки'/
-    foreign_key( horeca_basket_id ): UUID <<FK>> /'Корзина хореки'/
+    /'column( bank_account ): TEXT'/ /'Расчетный счет хореки'/
 }
 
 table( horeca_favourites ){
     primary_key( id ): UUID
     foreign_key( horeca_id ): UUID <<FK>>
-    foreign_key( suplliers_id ): UUID <<FK>>
+    foreign_key( supllier_id ): UUID <<FK>>
 }
 
 table( restaurant ){
@@ -126,39 +124,62 @@ table( restaurant_adress ){
 table( horeca_basket ){
     primary_key( id ): UUID
     foreign_key( horeca_id ): UUID <<FK>>
+    foreign_key( supplier_id ): UUID <<FK>> 
+    foreign_key( good_ids ): ARRAY UUID <<FK>> /'массив заказанных товаров'/
+    column( total_price ): NUMERIC
+    column( is_active ): BOOL
+    column( modified ): datetime
+}
+
+table( horeca_basket_goods ){
+    primary_key( id ): UUID
+    foreign_key( horeca_basket_id ): UUID <<FK>>
     foreign_key( good_id ): UUID <<FK>>
+    column( quantity ): INTEGER
 }
 
 table( horeca_order ){
     primary_key( id ): UUID
     foreign_key( horeca_basket_id ): UUID <<FK>>
-    column( company_name ): TEXT
+    column( restaurant_name ): TEXT
     column( delivery_adress ): TEXT
     column( comment ): TEXT
+    column( phone_number ): TEXT
+    column( second_phone_number ): TEXT
     column( delivery_day ): TEXT
     column( delivery_time ): TEXT 
+    column( is_individual ) TEXT /'Признак "оплатить как физлицо"'/
+    column( created ): datetime
 }
 
 suppliers ||--o{ supplier_cert
 
-suppliers_city_tags }|--|{ city_tags
-suppliers_city_tags }|--|{ suppliers
+suppliers_city_tags }|--|| city_tags
+suppliers_city_tags }|--|| suppliers
 
-suppliers_region_tags }|--|{ region_tags
-suppliers_region_tags }|--|{ suppliers
+suppliers_region_tags }|--|| region_tags
+suppliers_region_tags }|--|| suppliers
 
 suppliers ||--o{ good
 
 category_tag ||--o{ good_tag
 category_tag ||--|{ good
 
-horeca }|--|{ horeca_favourites
-suppliers }|--|{ horeca_favourites
+horeca ||--|{ horeca_favourites
+suppliers ||--|{ horeca_favourites
 
 restaurant ||--|{ restaurant_adress
 horeca ||--o{ restaurant
 
-horeca }o--o{ horeca_basket
+horeca ||--o{ horeca_basket
 good }o--o{ horeca_basket
+
+horeca_basket ||--|| horeca_order
+
+horeca_basket }o--|| suppliers
+
+horeca_basket_goods }|--|| horeca_basket
+
+horeca_basket_goods }|--|| good
 
 @enduml
