@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+generate_fake_data/
+requests_templ.json
+response_example.txt
+test.xlsx
