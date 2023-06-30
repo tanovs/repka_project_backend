@@ -6,3 +6,13 @@ services:
     ports:
       - 5432:5432
     restart: on-failure
+  
+  repka_admin:
+    build: ./repka_admin
+    env_file:
+      - ./env/repka_admin/.env
+    ports:
+      - 8000:8000
+    depends_on:
+      - postgres
+    restart: on-failure

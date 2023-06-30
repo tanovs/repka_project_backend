@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from db.postgresql import get_postgres
 from fastapi import Depends
 from models.supplier import City, Region, Supplier
+from models.good import Good, Tag, Category
 from sqlalchemy import Select, select
 from sqlalchemy.ext.asyncio import AsyncEngine, async_sessionmaker
 
@@ -54,9 +55,18 @@ class GetDataService:
             Supplier.OGRN,
             Supplier.INN,
             Supplier.bank_account,
-        )
+        ).where(Supplier.id==supplier_id)
         ret = await self.select_data(stmt=stmt)
         return ret.fetchone()._asdict()
+    
+    async def get_good_by_category(self, category_id: uuid.UUID):
+        stmt = (
+            select(Good).
+            join(Category).
+            where(Category.id==category_id)
+        )
+        ret = await self.select_data(stmt=stmt)
+        return ret
 
 
 def get_data_service(
