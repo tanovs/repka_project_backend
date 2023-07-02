@@ -68,7 +68,7 @@ class Supplier(UUIDMixin, TimeStampMixin):
     contact_name = models.TextField(_('contact_name'))  # Контактное лицо
     phone_number = models.TextField(_('phone_number'))  # Номер телефона
     email = models.TextField(_('email'))  # email
-    company_address = models.TextField(_('company_address'), blank=True)  # Адрес компании
+    company_adress = models.TextField(_('company_adress'), blank=True)  # Адрес компании
     website = models.TextField(_('website'), blank=True)  # Сайт
     social_network = models.TextField(_('social_network'), blank=True)  # Cоциальные сети
     delivery_region = models.ManyToManyField(Region, through='SupplierRegion')# Регион доставки
@@ -76,9 +76,9 @@ class Supplier(UUIDMixin, TimeStampMixin):
     delivery_time = models.TextField(_('delivery_time'))  # Время доставки
     delivery_day = models.TextField(_('delivery_day'))  # Сроки доставки
     min_price = models.TextField(_('min_price'))  # Минимальная цена заказа
-    OOO = models.TextField(_('OOO'), blank=True)  # ООО/ИП/Самозанятость
-    OGRN = models.TextField(_('OGRN'), blank=True)  # ОГРН
-    INN = models.TextField(_('INN'), blank=True)  # ИНН
+    ooo = models.TextField(_('OOO'), blank=True)  # ООО/ИП/Самозанятость
+    ogrn = models.TextField(_('OGRN'), blank=True)  # ОГРН
+    inn = models.TextField(_('INN'), blank=True)  # ИНН
     class Meta:
         db_table = "repka\".\"supplier"
         verbose_name = "Поставщик"
@@ -127,7 +127,7 @@ class Tag(UUIDMixin, TimeStampMixin):
     category = models.ForeignKey('Category', on_delete=models.CASCADE)
 
     class Meta:
-        db_table = "repka\".\"good_tag"
+        db_table = "repka\".\"tag"
         verbose_name = "Тег"
         verbose_name_plural = "Теги"
     
@@ -139,7 +139,7 @@ class Good(TimeStampMixin, UUIDMixin):
     photo = models.ImageField(_('photo'))  # фото товара
     price = models.TextField(_('price'))  # цена товара
     volume = models.TextField(_('volume'))  # объем товара
-    limit = models.TextField(_('limit'))  # остаток товара
+    balance = models.TextField(_('balance'))  # остаток товара
     calories = models.TextField(_('calories'), blank=True)  # КБЖУ
     compound = models.TextField(_('compound'), blank=True)  # Состав
     expiration_day = models.TextField(_('expiration_day'), blank=True)  # Срок годности и условия хранения

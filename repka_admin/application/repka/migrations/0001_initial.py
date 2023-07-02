@@ -15,188 +15,144 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RunSQL(
             sql = 'create schema if not exists repka;',
-            reverse_sql= 'drop schema repka cascade;'
+            reverse_sql= 'drop schema repka cascade;',
         ),
-        migrations.CreateModel(
-            name='Category',
-            fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('category_name', models.TextField(verbose_name='category_name')),
-                ('created', models.DateTimeField(auto_now_add=True)),
-                ('modified', models.DateTimeField(auto_now=True)),
-            ],
-            options={
-                'verbose_name': 'Категория',
-                'verbose_name_plural': 'Категории',
-                'db_table': 'repka"."category',
-            },
+        migrations.RunSQL(
+            sql = '''create table if not exists repka.region(
+            id uuid default gen_random_uuid() not null,
+            region_name text not null,
+            created timestamp with time zone default now(),
+            modified timestamp with time zone default now(),
+            primary key (id),
+            unique(region_name)
+            );''',
+            reverse_sql = 'drop table if exists repka.region;',
         ),
-        migrations.CreateModel(
-            name='City',
-            fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('city_name', models.TextField(verbose_name='city_name')),
-                ('created', models.DateTimeField(auto_now_add=True)),
-                ('modified', models.DateTimeField(auto_now=True)),
-            ],
-            options={
-                'verbose_name': 'Город',
-                'verbose_name_plural': 'Города',
-                'db_table': 'repka"."city',
-            },
+        migrations.RunSQL(
+            sql = '''create table if not exists repka.city(
+            id uuid default gen_random_uuid() not null,
+            city_name text not null,
+            region_id uuid not null,
+            created timestamp with time zone default now() not null,
+            modified timestamp with time zone default now() not null,
+            primary key (id),
+            foreign key (region_id) references repka.region(id) on update cascade on delete cascade,
+            unique(city_name, region_id)
+            );''',
+            reverse_sql = 'drop table if exists repka.city;',
         ),
-        migrations.CreateModel(
-            name='Good',
-            fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('name', models.TextField(verbose_name='name')),
-                ('photo', models.ImageField(blank=True, upload_to='', verbose_name='photo')),
-                ('price', models.TextField(verbose_name='price')),
-                ('volume', models.TextField(verbose_name='volume')),
-                ('limit', models.TextField(blank=True, verbose_name='limit')),
-                ('calories', models.TextField(blank=True, verbose_name='calories')),
-                ('compound', models.TextField(blank=True, verbose_name='compound')),
-                ('expiration_day', models.TextField(blank=True, verbose_name='expiration_day')),
-                ('created', models.DateTimeField(auto_now_add=True)),
-                ('modified', models.DateTimeField(auto_now=True)),
-            ],
-            options={
-                'verbose_name': 'Товар',
-                'verbose_name_plural': 'Товары',
-                'db_table': 'repka"."good',
-            },
+        migrations.RunSQL(
+            sql = '''create table if not exists repka.supplier(
+            id uuid default gen_random_uuid() not null,
+            company_name text not null,
+            contact_name text not null,
+            phone_number text not null,
+            email text not null,
+            company_adress text,
+            website text,
+            social_network text,
+            delivery_time text not null,
+            delivery_day text not null,
+            min_price text not null,
+            ooo text,
+            ogrn text,
+            inn text,
+            created timestamp with time zone default now() not null,
+            modified timestamp with time zone default now() not null,
+            primary key (id)
+            );''',
+            reverse_sql = 'drop table if exists repka.supplier;',
         ),
-        migrations.CreateModel(
-            name='Region',
-            fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('region_name', models.TextField(verbose_name='region_name')),
-                ('created', models.DateTimeField(auto_now_add=True)),
-                ('modified', models.DateTimeField(auto_now=True)),
-            ],
-            options={
-                'verbose_name': 'Регион',
-                'verbose_name_plural': 'Регионы',
-                'db_table': 'repka"."region',
-            },
+        migrations.RunSQL(
+            sql = '''create table if not exists repka.supplier_region(
+            id uuid default gen_random_uuid() not null,
+            supplier_id uuid not null,
+            region_id uuid not null,
+            created timestamp with time zone default now() not null,
+            primary key (id),
+            foreign key (region_id) references repka.region(id) on update cascade on delete cascade,
+            foreign key (supplier_id) references repka.supplier(id) on update cascade on delete cascade
+            );''',
+            reverse_sql = 'drop table if exists repka.supplier_region;',
         ),
-        migrations.CreateModel(
-            name='Supplier',
-            fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('company_name', models.TextField(verbose_name='company_name')),
-                ('contact_name', models.TextField(verbose_name='contact_name')),
-                ('phone_number', models.TextField(verbose_name='phone_number')),
-                ('email', models.TextField(verbose_name='email')),
-                ('company_address', models.TextField(verbose_name='company_address')),
-                ('website', models.TextField(blank=True, verbose_name='website')),
-                ('social_network', models.TextField(blank=True, verbose_name='social_network')),
-                ('delivery_time', models.TextField(blank=True, verbose_name='delivery_time')),
-                ('delivery_day', models.TextField(blank=True, verbose_name='delivery_day')),
-                ('min_price', models.TextField(blank=True, verbose_name='min_price')),
-                ('OOO', models.TextField(blank=True, verbose_name='OOO')),
-                ('OGRN', models.TextField(blank=True, verbose_name='OGRN')),
-                ('INN', models.TextField(blank=True, verbose_name='INN')),
-                ('bank_account', models.TextField(blank=True, verbose_name='bank_account')),
-                ('created', models.DateTimeField(auto_now_add=True)),
-                ('modified', models.DateTimeField(auto_now=True)),
-            ],
-            options={
-                'verbose_name': 'Покупатель',
-                'verbose_name_plural': 'Покупатели',
-                'db_table': 'repka"."supplier',
-            },
+        migrations.RunSQL(
+            sql = '''create table if not exists repka.supplier_city(
+            id uuid default gen_random_uuid() not null,
+            supplier_id uuid not null,
+            city_id uuid not null,
+            created timestamp with time zone default now() not null,
+            primary key (id),
+            foreign key (city_id) references repka.city(id) on update cascade on delete cascade,
+            foreign key (supplier_id) references repka.supplier(id) on update cascade on delete cascade
+            );''',
+            reverse_sql = 'drop table if exists repka.supplier_city;',
         ),
-        migrations.CreateModel(
-            name='Tag',
-            fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('tag_name', models.TextField(verbose_name='tag_name')),
-                ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='repka.category')),
-                ('created', models.DateTimeField(auto_now_add=True)),
-                ('modified', models.DateTimeField(auto_now=True)),
-            ],
-            options={
-                'verbose_name': 'Тег',
-                'verbose_name_plural': 'Теги',
-                'db_table': 'repka"."good_tag',
-            },
+        migrations.RunSQL(
+            sql = '''create table if not exists repka.supplier_cert(
+            id uuid default gen_random_uuid() not null,
+            certificate bytea,
+            certificate_url text,
+            supplier_id uuid not null,
+            created timestamp with time zone default now() not null,
+            modified timestamp with time zone default now() not null,
+            primary key (id),
+            foreign key (supplier_id) references repka.supplier(id) on update cascade on delete cascade
+            );''',
+            reverse_sql = 'drop table if exists repka.supplier_cert;',
         ),
-        migrations.CreateModel(
-            name='SupplierRegion',
-            fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('region', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='repka.region')),
-                ('supplier', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='repka.supplier')),
-                ('created', models.DateTimeField(auto_now_add=True)),
-            ],
-            options={
-                'db_table': 'repka"."supplier_region',
-            },
+        migrations.RunSQL(
+            sql = '''create table if not exists repka.category(
+            id uuid default gen_random_uuid() not null,
+            category_name text not null,
+            created timestamp with time zone default now() not null,
+            modified timestamp with time zone default now() not null,
+            primary key (id),
+            unique(category_name)
+            );''',
+            reverse_sql = 'drop table if exists repka.category;',
         ),
-        migrations.CreateModel(
-            name='SupplierCity',
-            fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('city', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='repka.city')),
-                ('supplier', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='repka.supplier')),
-                ('created', models.DateTimeField(auto_now_add=True)),
-            ],
-            options={
-                'db_table': 'repka"."supplier_city',
-            },
+        migrations.RunSQL(
+            sql = '''create table if not exists repka.tag(
+            id uuid default gen_random_uuid() not null,
+            tag_name text not null,
+            category_id uuid not null,
+            created timestamp with time zone default now() not null,
+            modified timestamp with time zone default now() not null,
+            primary key (id),
+            foreign key (category_id) references repka.category(id) on update cascade on delete cascade,
+            unique(tag_name, category_id)
+            );''',
+            reverse_sql = 'drop table if exists repka.tag;',
         ),
-        migrations.CreateModel(
-            name='SupplierCert',
-            fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('certificate', models.ImageField(blank=True, upload_to='', verbose_name='certificate')),
-                ('certificate_url', models.TextField(blank=True, verbose_name='certificate_url')),
-                ('supplier', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='repka.supplier')),
-                ('created', models.DateTimeField(auto_now_add=True)),
-                ('modified', models.DateTimeField(auto_now=True)),
-            ],
-            options={
-                'verbose_name': 'Сертификат поставщика',
-                'verbose_name_plural': 'Сертификаты поставщиков',
-                'db_table': 'repka"."supplier_cert',
-            },
+        migrations.RunSQL(
+            sql = '''create table if not exists repka.good(
+            id uuid default gen_random_uuid() not null,
+            name text not null,
+            photo bytea not null,
+            price text not null,
+            volume text not null,
+            balance text not null,
+            calories text,
+            compound text,
+            expiration_day text,
+            supplier_id uuid not null,
+            created timestamp with time zone default now() not null,
+            modified timestamp with time zone default now() not null,
+            primary key (id),
+            foreign key (supplier_id) references repka.supplier(id) on update cascade on delete cascade
+            );''',
+            reverse_sql = 'drop table if exists repka.good;',
         ),
-        migrations.AddField(
-            model_name='supplier',
-            name='delivery_city',
-            field=models.ManyToManyField(through='repka.SupplierCity', to='repka.City'),
-        ),
-        migrations.AddField(
-            model_name='supplier',
-            name='delivery_region',
-            field=models.ManyToManyField(through='repka.SupplierRegion', to='repka.Region'),
-        ),
-        migrations.CreateModel(
-            name='GoodCategory',
-            fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created', models.DateTimeField(auto_now_add=True)),
-                ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='repka.category')),
-                ('good', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='repka.good')),
-            ],
-            options={
-                'db_table': 'repka"."good_category',
-            },
-        ),
-        migrations.AddField(
-            model_name='good',
-            name='category',
-            field=models.ManyToManyField(through='repka.GoodCategory', to='repka.Category'),
-        ),
-        migrations.AddField(
-            model_name='good',
-            name='supplier',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='repka.supplier'),
-        ),
-        migrations.AddField(
-            model_name='city',
-            name='region',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='repka.region'),
+        migrations.RunSQL(
+            sql = '''create table if not exists repka.good_category(
+            id uuid default gen_random_uuid() not null,
+            good_id uuid not null,
+            category_id uuid not null,
+            created timestamp with time zone default now() not null,
+            primary key (id),
+            foreign key (good_id) references repka.good(id) on update cascade on delete cascade,
+            foreign key (category_id) references repka.category(id) on update cascade on delete cascade
+            );''',
+            reverse_sql = 'drop table if exists repka.good_category;',
         ),
     ]

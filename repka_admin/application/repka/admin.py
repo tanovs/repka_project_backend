@@ -41,9 +41,9 @@ class SupplierAdmin(admin.ModelAdmin):
 
     list_display = (
         'company_name', 'contact_name', 'phone_number',
-        'email', 'company_address', 'website', 'social_network', 
-        'delivery_time', 'delivery_day', 'get_regions', 'get_cities', 'min_price', 'OOO',
-        'OGRN', 'INN', 'created', 'modified',
+        'email', 'company_adress', 'website', 'social_network', 
+        'delivery_time', 'delivery_day', 'get_regions', 'get_cities', 'min_price', 'ooo',
+        'ogrn', 'inn', 'created', 'modified',
     )
     list_filter = ('created', 'modified')
     search_fields = ('company_name',)
@@ -62,7 +62,7 @@ class GoodAdmin(admin.ModelAdmin):
     inline = (GoodCategoryInline, )
 
     list_display = (
-        'name', 'photo', 'price', 'volume', 'limit', 'calories',
+        'name', 'photo', 'price', 'volume', 'balance', 'calories',
         'compound', 'expiration_day', 'supplier', 'created', 'modified',
     )
     list_filter = ('created', 'modified')
