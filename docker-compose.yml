@@ -13,7 +13,6 @@ services:
       - ./env/repka_admin/.env
     ports:
       - 8000:8000
-    entrypoint: /opt/app/start.sh
     depends_on:
       - postgres
     restart: on-failure

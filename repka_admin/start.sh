@@ -5,4 +5,5 @@
 # done 
 
 python3.10 application/manage.py migrate --noinput || exit 1
-python3.10 application/manage.py runserver
+# python3.10 application/manage.py runserver
+uwsgi --strict --ini application/uwsgi.ini

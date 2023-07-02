@@ -1,6 +1,6 @@
 FROM python:3.10
 
-WORKDIR /opt/app
+WORKDIR /opt
 
 ENV DJANGO_SETTINGS_MODULE 'config.settings'
 
@@ -13,14 +13,7 @@ RUN pip install --upgrade pip \
 
 COPY . .
 
-# ENV POSTGRES_PASSWORD=123qwe
-# ENV POSTGRES_HOST=127.0.0.1
-# ENV POSTGRES_PORT=5432
-# ENV POSTGRES_NAME=repka_database
-# ENV POSTGRES_USER=repka
-# ENV SECRET_KEY='django-insecure-p0tnc=)(%lim3bb_*ye*k#!5azy-7wprk1u-akqj@(8au2!9f-'
-# ENV DEBUG=True
-# ENV ALLOWED_HOSTS=localhost,127.0.0.1
+COPY uwsgi/uwsgi.ini application/uwsgi.ini
 
 EXPOSE 8000
 
