@@ -6,6 +6,6 @@ done
 
 python3.10 application/manage.py migrate --noinput || exit 1
 python3.10 application/manage.py collectstatic --noinput
-chmod 777 application/static/
-chmod 777 application/static/admin/
+# chmod 777 application/static/
+# chmod 777 application/static/admin/
 uwsgi --strict --ini application/uwsgi.ini
