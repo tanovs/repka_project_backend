@@ -54,4 +54,4 @@ async def shutdown():
 app.include_router(tags.router, prefix='/api/v1', tags=['tags'])
 
 if __name__ == '__main__':
-    uvicorn.run('main:app', host='0.0.0.0', port=8000)
+    uvicorn.run('main:app', host='0.0.0.0', port=8080)
