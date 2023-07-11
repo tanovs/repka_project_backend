@@ -1,6 +1,7 @@
 from uuid import UUID
 
 from pydantic import BaseModel
+from typing import Optional
 
 
 class RegionTag(BaseModel):
@@ -14,6 +15,7 @@ class RegionTag(BaseModel):
 class CityTag(BaseModel):
     id: UUID
     city_name: str
+    region_name: str
 
     class Config:
         orm_mode = True
@@ -36,6 +38,7 @@ class CityTagResponse(BaseModel):
 class Category(BaseModel):
     id: UUID
     category_name: str
+    file_path: Optional[str]
 
     class Config:
         orm_mode = True
@@ -57,7 +60,7 @@ class GoodTag(BaseModel):
 
 
 class TagResponse(BaseModel):
-    good_tag: list[GoodTag]
+    tags: list[GoodTag]
 
     class Config:
         orm_mode = True

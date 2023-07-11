@@ -38,6 +38,7 @@ class Category(Base, TimeStampMixin, UUIDMixin):
     __tablename__ = 'category'
 
     category_name = Column(String, nullable=False)
+    file_path = Column(String)
     tag = relationship('Tag', back_populates='category')
     good = relationship(
         'Good',
@@ -47,7 +48,7 @@ class Category(Base, TimeStampMixin, UUIDMixin):
 
 
 class Tag(Base, UUIDMixin, TimeStampMixin):
-    __tablename__ = 'good_tag'
+    __tablename__ = 'tag'
 
     tag_name = Column(String, nullable=False)
     category_id = Column(Uuid, ForeignKey('category.id'))

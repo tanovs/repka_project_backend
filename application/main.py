@@ -17,7 +17,6 @@ app = FastAPI(
     openapi_url='/api/openapi.json',
 )
 
-
 @app.on_event('startup')
 async def startup():
     postgresql.postgres = create_async_engine(SETTINGS.db.url, echo=True)
@@ -50,8 +49,8 @@ async def shutdown():
 # status='false', message=details[0]["msg"]).json(),
 #     )
 
-app.include_router(supplier.router, prefix='/api/v1', tags=['supplier'])
-app.include_router(good.router, prefix='/api/v1', tags=['good'])
+# app.include_router(supplier.router, prefix='/api/v1', tags=['supplier'])
+# app.include_router(good.router, prefix='/api/v1', tags=['good'])
 app.include_router(tags.router, prefix='/api/v1', tags=['tags'])
 
 if __name__ == '__main__':

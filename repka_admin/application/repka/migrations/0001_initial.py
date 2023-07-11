@@ -115,6 +115,7 @@ class Migration(migrations.Migration):
             sql = '''create table if not exists repka.category(
             id uuid default gen_random_uuid() not null,
             category_name text not null,
+            file_path text,
             created timestamp with time zone default now() not null,
             modified timestamp with time zone default now() not null,
             primary key (id),
