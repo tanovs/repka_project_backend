@@ -6,23 +6,42 @@ from pydantic import BaseModel
 
 class AddGood(BaseModel):
     name: str
-    photo: Optional[bytes]
     price: str
-    limit: str
     volume: str
-    calories: str
-    compound: str
-    expiration_day: str
-    category: list[str]
-    tag: list[str]
+    balance: str
+    calories: Optional[str]
+    compound: Optional[str]
+    expiration_day: Optional[str]
+    producer: Optional[str]
+    sample: Optional[bool]
+    sample_amount: Optional[int]
+    tag_id: str
+
+    class Config:
+        orm_mode = True
 
 
 class AddGoodRequest(BaseModel):
     supplier_id: UUID
     goods: list[AddGood]
 
+    class Config:
+        orm_mode = True
+
 
 class AddGoodResponse(BaseModel):
     status: str
     message: str
-    good_uuid: list[UUID]
+    good_uuid: UUID
+
+class GoodInfo(BaseModel):
+    name: str
+    price: str
+    volume: str
+    balance: str
+    calories: Optional[str]
+    compound: Optional[str]
+    expiration_day: Optional[str]
+    producer: Optional[str]
+    sample: Optional[bool]
+    sample_amount: Optional[int]

@@ -7,17 +7,25 @@ services:
       - 5432:5432
     restart: on-failure
   
-#   repka_admin:
-#     build: ./repka_admin
-#     env_file:
-#       - ./env/repka_admin/.env
-#     volumes:
-#       - static_volume:/opt/application/static/
-#     ports:
-#       - 8000:8000
-#     depends_on:
-#       - postgres
-#     restart: on-failure
+  # application:
+  #   build: ./application
+  #   env_file:
+  #     - ./env/application/.env
+  #   ports:
+  #     - 8080:8080
+  #   depends_on:
+  #     - postgres
+  #   restart: on-failure
+  
+  # repka_admin:
+  #   build: ./repka_admin
+  #   env_file:
+  #     - ./env/repka_admin/.env
+  #   volumes:
+  #     - static_volume:/opt/application/static/
+  #   depends_on:
+  #     - postgres
+  #   restart: on-failure
   
 #   nginx:
 #     image: nginx:1.19.2

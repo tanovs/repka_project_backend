@@ -1,5 +1,5 @@
 import uvicorn
-from api.v1 import good, supplier, tags
+from api.v1 import good, supplier, tags, orders, search
 from core.config import Settings
 from db import postgresql
 from fastapi import FastAPI
@@ -49,9 +49,12 @@ async def shutdown():
 # status='false', message=details[0]["msg"]).json(),
 #     )
 
-# app.include_router(supplier.router, prefix='/api/v1', tags=['supplier'])
+app.include_router(supplier.router_supplier_add, prefix='/api/v1', tags=['Ручки для экрана "Форма для поставщиков"'])
+# app.include_router(supplier.router_supplier_get, prefix='/api/v1', tags=['Ручки для экрана "Экран поставщика + экран товара"'])
 # app.include_router(good.router, prefix='/api/v1', tags=['good'])
 app.include_router(tags.router, prefix='/api/v1', tags=['tags'])
+# app.include_router(orders.router, prefix='/api/v1', tags=['Ручки для экрана "Сценарий заказа товара"'])
+# app.include_router(search.router, prefix='/api/v1', tags=['search'])
 
 if __name__ == '__main__':
     uvicorn.run('main:app', host='0.0.0.0', port=8080)
