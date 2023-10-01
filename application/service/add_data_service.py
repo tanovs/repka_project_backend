@@ -36,7 +36,26 @@ class AddDataService():
     async def add_supplier(self, data: AddSupplierRequest):
         return await self.insert(Supplier(**data.dict()))
 
-    async def add_supplier_certs(self, supplier_id: uuid, url: Optional[str], cert: Optional[UploadFile]):
+    async def add_supplier_certs(
+        self,
+        supplier_id: uuid,
+        url: Optional[str] = None,
+        cert: Optional[UploadFile] = None,
+    ):
+        if not url:
+            return await self.insert(
+                SupplierCert(
+                    certificate=cert,
+                    supplier_id=supplier_id
+                )
+            )
+        if not cert:
+            return await self.insert(
+                SupplierCert(
+                    certificate_url=url,
+                    supplier_id=supplier_id
+                )
+            )
         return await self.insert(
             SupplierCert(
                 certificate=cert,

@@ -31,7 +31,7 @@ class SendEmailService():
         )
         message = MessageSchema(
             subject='Ваша компания зарегестрирована в сервисе Repka',
-            recipients=['a.koreyba@repka.tech'], # Заменить на почту поставщика
+            recipients=[email],
             body=template,
             subtype=MessageType.html,
         )

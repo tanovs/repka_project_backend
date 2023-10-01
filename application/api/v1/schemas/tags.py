@@ -54,6 +54,7 @@ class CategoriesResponse(BaseModel):
 class GoodTag(BaseModel):
     id: UUID
     tag_name: str
+    category_name: str
 
     class Config:
         orm_mode = True

@@ -33,11 +33,22 @@ async def add_supplier_files(
     company_logo: UploadFile | None = File(None),
     data_service: UpdateDataService = Depends(get_update_data_service),
 ):
-    supplier_id = await data_service.add_supplier_files(
-        supplier_id=supplier_id,
-        cover=company_cover.file.read(),
-        logo=company_logo.file.read(),
-    )
+    if company_cover and company_logo:
+        supplier_id = await data_service.add_supplier_files(
+            supplier_id=supplier_id,
+            cover=company_cover.file.read(),
+            logo=company_logo.file.read(),
+        )
+    elif not company_logo:
+        supplier_id = await data_service.add_supplier_files(
+            supplier_id=supplier_id,
+            cover=company_cover.file.read(),
+        )
+    elif not company_cover:
+        supplier_id = await data_service.add_supplier_files(
+            supplier_id=supplier_id,
+            logo=company_logo.file.read(),
+        )
     return AddSupplierResponse(
         status='success',
         message='files added',
@@ -60,38 +71,49 @@ async def add_supplier_region_city(
         supplier_uuid=supplier_id,
     )
 
-# @router_supplier_add.post('/supplier/add/certs/{supplier_id}', response_model=AddSupplierResponse)
-# async def add_supplier_certs(
-#     supplier_id: UUID,
-#     cert_url: Optional[str] = None,
-#     cert: UploadFile | None = File(None),
-#     data_service: AddDataService = Depends(get_add_data_service),
-# ):
-#     supplier_id = await data_service.add_supplier_certs(
-#         supplier_id=supplier_id,
-#         url=cert_url,
-#         cert=cert.file.read(),
-#     )
-#     return AddSupplierResponse(
-#         status='success',
-#         message='certs added',
-#         supplier_uuid=supplier_id,
-#     )
+@router_supplier_add.post('/supplier/add/certs/{supplier_id}', response_model=AddSupplierResponse)
+async def add_supplier_certs(
+    supplier_id: UUID,
+    cert_url: Optional[str] = None,
+    cert: UploadFile | None = File(None),
+    data_service: AddDataService = Depends(get_add_data_service),
+):
+    if not cert:
+        supplier_id = await data_service.add_supplier_certs(
+            supplier_id=supplier_id,
+            url=cert_url,
+        )
+    elif not cert_url:
+        supplier_id = await data_service.add_supplier_certs(
+            supplier_id=supplier_id,
+            cert=cert.file.read(),
+        )
+    elif cert and cert_url:
+        supplier_id = await data_service.add_supplier_certs(
+            supplier_id=supplier_id,
+            url=cert_url,
+            cert=cert.file.read(),
+        )
+    return AddSupplierResponse(
+        status='success',
+        message='certs added',
+        supplier_uuid=supplier_id,
+    )
 
-# @router_supplier_add.post('/supplier/send_notification/{supplier_id}', response_model=AddSupplierResponse)
-# async def send_notification(
-#     supplier_id: UUID,
-#     profile_url: str,
-#     service: SendEmailService = Depends(get_send_email_service),
-#     db_service: GetDataService = Depends(get_data_service)
-# ):
-#     info = await db_service.get_supplier_data_for_email_service(supplier_id=supplier_id)
-#     await service.send_email_add_supplier(company_name=info[0].company_name, url=profile_url, email=info[0].email)
-#     return AddSupplierResponse(
-#         status='success',
-#         message='notification send',
-#         supplier_uuid=supplier_id,
-#     )
+@router_supplier_add.post('/supplier/send_notification/{supplier_id}', response_model=AddSupplierResponse)
+async def send_notification(
+    supplier_id: UUID,
+    profile_url: str,
+    service: SendEmailService = Depends(get_send_email_service),
+    db_service: GetDataService = Depends(get_data_service)
+):
+    info = await db_service.get_supplier_data_for_email_service(supplier_id=supplier_id)
+    await service.send_email_add_supplier(company_name=info[0].company_name, url=profile_url, email=info[0].email)
+    return AddSupplierResponse(
+        status='success',
+        message='notification send',
+        supplier_uuid=supplier_id,
+    )
     
 
 # # Получение данных о поставщике

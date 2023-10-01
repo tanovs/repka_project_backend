@@ -37,6 +37,13 @@ class GetDataService:
             .order_by(Region.region_name)
             .limit(size)
         ))).fetchall()
+
+    async def get_region_service_like(self, like: str):
+        return (await self.select_data(stmt=(
+            select(Region.id, Region.region_name)
+            .order_by(Region.region_name)
+            ).filter(Region.region_name.ilike(f'%{like}%'))
+        )).fetchall()
     
     async def get_city_service(self):
         return (
@@ -46,6 +53,29 @@ class GetDataService:
                     .join(Region, Region.id == City.region_id)
                     .order_by(Region.region_name)
                 )
+            )
+        ).fetchall()
+    
+    async def get_city_service_in_region(self, region: uuid.UUID):
+        return (
+            await self.select_data(
+                stmt=(
+                    select(City.id, City.city_name, Region.region_name)
+                    .join(Region, Region.id == City.region_id)
+                    .where(Region.id == region)
+                    .order_by(Region.region_name)
+                )
+            )
+        ).fetchall()
+    
+    async def get_city_service_like(self, like: str):
+        return (
+            await self.select_data(
+                stmt=(
+                    select(City.id, City.city_name, Region.region_name)
+                    .join(Region, Region.id == City.region_id)
+                    .order_by(Region.region_name)
+                ).filter(City.city_name.ilike(f'%{like}%'))
             )
         ).fetchall()
     
@@ -63,20 +93,74 @@ class GetDataService:
             .limit(size)
         ))).fetchall()
     
-    async def get_tag_service(self, category: uuid.UUID, tag: str, size: int):
+    async def get_category_service_like(self, like: str):
+        return (
+            await self.select_data(
+                stmt=(
+                    select(Category.id, Category.category_name, Category.file_path)
+                    .order_by(Category.category_name)
+                ).filter(Category.category_name.ilike(f'%{like}%'))
+            )
+        ).fetchall()
+    
+    async def get_tag_service(self, category: uuid.UUID):
+        return (
+            await self.select_data(
+                stmt=(
+                    select(Tag.id, Tag.tag_name, Category.category_name)
+                    .join(Category, Category.id==Tag.category_id)
+                    .where(Category.id == category)
+                    .order_by(Tag.tag_name)
+                )
+            )
+        ).fetchall()
+    
+    async def get_tag_service_category_like(self, category: uuid.UUID, like: str):
+        return (
+            await self.select_data(
+                stmt=(
+                    select(Tag.id, Tag.tag_name, Category.category_name)
+                    .join(Category, Category.id==Tag.category_id)
+                    .where(Category.id == category)
+                ).filter(Tag.tag_name.ilike(f'%{like}%'))
+            )
+        ).fetchall()
+    
+    async def get_tag_service_all(self, size: int, tag: str = None):
         if tag:
-            return (await self.select_data(stmt=(
-                select(Tag.id, Tag.tag_name)
-                .order_by(Tag.tag_name)
-                .where(Tag.category_id==category, Tag.tag_name > tag)
-                .limit(size)
-            ))).fetchall()
-        return (await self.select_data(stmt=(
-            select(Tag.id, Tag.tag_name)
-            .order_by(Tag.tag_name)
-            .where(Tag.category_id==category)
-            .limit(size)
-        ))).fetchall()
+            return (
+                await self.select_data(
+                    stmt=(
+                        select(Tag.id, Tag.tag_name, Category.category_name)
+                        .join(Category, Category.id == Tag.category_id)
+                        .order_by(Tag.tag_name)
+                        .where(Tag.tag_name > tag)
+                        .limit(size)
+                    )
+                )
+            ).fetchall()
+        return (
+                await self.select_data(
+                    stmt=(
+                        select(Tag.id, Tag.tag_name, Category.category_name)
+                        .join(Category, Category.id == Tag.category_id)
+                        .order_by(Tag.tag_name)
+                        .limit(size)
+                    )
+                )
+            ).fetchall()
+    
+    async def get_tag_service_like(self, like: str):
+        return (
+                await self.select_data(
+                    stmt=(
+                        select(Tag.id, Tag.tag_name, Category.category_name)
+                        .join(Category, Category.id == Tag.category_id)
+                        .order_by(Tag.tag_name)
+                    ).filter(Tag.tag_name.ilike(f'%{like}%'))
+                )
+            ).fetchall()
+    
     
     async def get_supplier_data_for_email_service(self, supplier_id: uuid.UUID):
         return (

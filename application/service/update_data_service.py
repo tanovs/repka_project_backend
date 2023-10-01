@@ -29,9 +29,27 @@ class UpdateDataService():
     async def add_supplier_files(
             self,
             supplier_id: uuid.UUID,
-            cover: Optional[UploadFile],
-            logo: Optional[UploadFile]
+            cover: Optional[UploadFile] = None,
+            logo: Optional[UploadFile] = None,
         ):
+        if not cover:
+            return (await self.get_session(
+            stmt=(
+                update(Supplier)
+                .where(Supplier.id==supplier_id)
+                .values(company_logo=logo)
+                .returning(Supplier.id)
+                )
+            )).fetchone()
+        if not logo:
+            return (await self.get_session(
+            stmt=(
+                update(Supplier)
+                .where(Supplier.id==supplier_id)
+                .values(company_cover=cover)
+                .returning(Supplier.id)
+                )
+            )).fetchone()
         return (await self.get_session(
             stmt=(
                 update(Supplier)
