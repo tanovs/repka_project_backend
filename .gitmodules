@@ -1,0 +1,3 @@
+[submodule "repka_admin"]
+	path = repka_admin
+	url = https://github.com/tanovs/repka_admin.git
