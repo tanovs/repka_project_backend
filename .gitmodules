@@ -4,3 +4,6 @@
 [submodule "repka_backend"]
 	path = repka_backend
 	url = https://github.com/tanovs/repka_backend.git
+[submodule "repka_admin_nginx"]
+	path = repka_admin_nginx
+	url = https://github.com/tanovs/repka_admin_nginx.git
