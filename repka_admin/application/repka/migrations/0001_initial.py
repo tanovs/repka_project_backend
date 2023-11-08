@@ -470,7 +470,7 @@ class Migration(migrations.Migration):
             id uuid default gen_random_uuid() not null,
             name text not null,
             photo bytea not null,
-            price text not null,
+            price text,
             volume text not null,
             balance text not null,
             calories text,
