@@ -85,7 +85,7 @@ class UpdateDataService():
             .where(Good.id==good_id)
             .values(photo=photo)
             .returning(Good.id)
-        )).scalars().all()[0]
+        )).fetchone()
         
 
 

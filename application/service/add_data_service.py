@@ -91,25 +91,6 @@ class AddDataService():
             bucket_id = await self.insert(Bucket(**good.dict(), supplier_id=data.supplier_id, info_id=info_id))
             bucket_ids.append(bucket_id)
         return bucket_ids
-    
-    # async def add_order(self, data: OrderRequest, bucket_id: str):
-    #     return await self.insert(
-    #         Order(
-    #             company_name=data.company_name,
-    #             delivery_region_city=data.delivery_city_region,
-    #             delivery_adress=data.delivery_adress,
-    #             contact_name=data.contact_name,
-    #             contact_phone=data.contact_phone,
-    #             contact_email=data.contact_email,
-    #             ooo=data.ooo,
-    #             inn=data.inn,
-    #             bank_account=data.bank_account,
-    #             bank_name=data.bank_name,
-    #             bucket_id=bucket_id
-    #         )
-    #     )
-        
-
 
 
 def get_add_data_service(

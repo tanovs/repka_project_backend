@@ -78,3 +78,14 @@ class SupplierGoodInfo(BaseModel):
 
 class GetSuppliersGoodResponse(BaseModel):
     tag_id: list[UUID]
+
+class SupplierTagResponse(BaseModel):
+    id: UUID
+    tag_name: str
+
+
+class SupplierGoodInfoResponse(BaseModel):
+    id: UUID
+    name: str
+    price: str
+    volume: str

@@ -1,13 +1,18 @@
-from api.v1.schemas.supplier import (AddSupplierRequest, AddSupplierResponse,
-                                     SupplierContacts, SupplierDeliveryInfo,
-                                     SupplierDocuments, AddSupplierDeliveryLocation, SupplierInfo, SupplierGoodInfo, GetSuppliersGoodResponse)
-from fastapi import APIRouter, Depends, UploadFile, Form, File, Body
-from service.add_data_service import AddDataService, get_add_data_service
-from service.update_data_service import UpdateDataService, get_update_data_service
-from service.get_data_service import GetDataService, get_data_service
-from typing import Optional, Annotated
+from typing import Annotated, Optional
 from uuid import UUID
+
+from api.v1.schemas.supplier import (AddSupplierDeliveryLocation,
+                                     AddSupplierRequest, AddSupplierResponse,
+                                     GetSuppliersGoodResponse,
+                                     SupplierContacts, SupplierDeliveryInfo,
+                                     SupplierDocuments, SupplierGoodInfo,
+                                     SupplierInfo, SupplierTagResponse, SupplierGoodInfoResponse)
+from fastapi import APIRouter, Body, Depends, File, Form, Response, UploadFile
+from service.add_data_service import AddDataService, get_add_data_service
+from service.get_data_service import GetDataService, get_data_service
 from service.send_email_service import SendEmailService, get_send_email_service
+from service.update_data_service import (UpdateDataService,
+                                         get_update_data_service)
 
 router_supplier_add = APIRouter()
 router_supplier_get = APIRouter()
@@ -116,93 +121,125 @@ async def send_notification(
     )
     
 
-# # Получение данных о поставщике
-# @router_supplier_get.get('/supplier/company_name/{supplier_id}', response_model=SupplierInfo)
-# async def get_supplier_company_name(
-#     supplier_id: UUID,
-#     service: GetDataService = Depends(get_data_service)
-# ):
-#     company_name = await service.get_supplier_company_name(supplier_id=supplier_id)
-#     return SupplierInfo.parse_obj(company_name)
+# Получение данных о поставщике
+@router_supplier_get.get('/supplier/company_name/{supplier_id}', response_model=SupplierInfo)
+async def get_supplier_company_name(
+    supplier_id: UUID,
+    service: GetDataService = Depends(get_data_service)
+):
+    company_name = await service.get_supplier_company_name(supplier_id=supplier_id)
+    return SupplierInfo.parse_obj(company_name)
 
-# @router_supplier_get.get('/suppler/contacts/{supplier_id}', response_model=SupplierContacts)
-# async def supplier_contacts(
-#     supplier_id: UUID,
-#     data_service: GetDataService = Depends(get_data_service),
-# ):
-#     contacts = await data_service.get_supplier_contacts(
-#         supplier_id=supplier_id,
-#     )
-#     return SupplierContacts.parse_obj(contacts)
+@router_supplier_get.get('/supplier/logo/{supplier_id}')
+async def get_supplier_logo(
+    supplier_id: UUID,
+    service: GetDataService = Depends(get_data_service),
+):
+    logo = await service.get_supplier_logo(supplier_id=supplier_id)
+    return Response(content=logo[0], media_type='application/octet-stream')
 
+@router_supplier_get.get('/supplier/cover/{supplier_id}')
+async def get_supplier_cover(
+    supplier_id: UUID,
+    service: GetDataService = Depends(get_data_service),
+):
+    cover = await service.get_supplier_cover(supplier_id=supplier_id)
+    return Response(content=cover[0], media_type='application/octet-stream')
 
-# @router_supplier_get.get('/supplier/delivery_info/{supplier_id}', response_model=SupplierDeliveryInfo)
-# async def supplier_delivery_info(
-#     supplier_id: UUID,
-#     data_service: GetDataService = Depends(get_data_service),
-# ):
-#     delivery_info = await data_service.get_supplier_delivery_info(
-#         supplier_id=supplier_id,
-#     )
-#     delivery_region_info = await data_service.get_region_for_supplier(
-#         supplier_id=supplier_id,
-#     )
-#     delivery_city_info = await data_service.get_city_for_supplier(
-#         supplier_id=supplier_id,
-#     )
-#     return SupplierDeliveryInfo(
-#         city_name = [city.city_name for city in delivery_city_info],
-#         region_name = [region.region_name for region in delivery_region_info],
-#         delivery_day_time = delivery_info[0].delivery_day_time,
-#         min_price = delivery_info[0].min_price,
-#         estimated_delivery_time = delivery_info[0].estimated_delivery_time
-#     )
+@router_supplier_get.get('/suppler/contacts/{supplier_id}', response_model=SupplierContacts)
+async def supplier_contacts(
+    supplier_id: UUID,
+    data_service: GetDataService = Depends(get_data_service),
+):
+    contacts = await data_service.get_supplier_contacts(
+        supplier_id=supplier_id,
+    )
+    return SupplierContacts.parse_obj(contacts)
 
 
-# @router_supplier_get.get('/suppler/documents/{supplier_id}', response_model=SupplierDocuments)
-# async def supplier_documents(
-#     supplier_id: UUID,
-#     data_service: GetDataService = Depends(get_data_service),
-# ):
-#     documents = await data_service.get_supplier_documents(
-#         supplier_id=supplier_id,
-#     )
-#     return SupplierDocuments.parse_obj(documents)
+@router_supplier_get.get('/supplier/delivery_info/{supplier_id}', response_model=SupplierDeliveryInfo)
+async def supplier_delivery_info(
+    supplier_id: UUID,
+    data_service: GetDataService = Depends(get_data_service),
+):
+    delivery_info = await data_service.get_supplier_delivery_info(
+        supplier_id=supplier_id,
+    )
+    delivery_region_info = await data_service.get_region_for_supplier(
+        supplier_id=supplier_id,
+    )
+    delivery_city_info = await data_service.get_city_for_supplier(
+        supplier_id=supplier_id,
+    )
+    return SupplierDeliveryInfo(
+        city_name = [city.city_name for city in delivery_city_info],
+        region_name = [region.region_name for region in delivery_region_info],
+        delivery_day_time = delivery_info[0].delivery_day_time,
+        min_price = delivery_info[0].min_price,
+        estimated_delivery_time = delivery_info[0].estimated_delivery_time
+    )
 
-# @router_supplier_get.get('/supplier/good/{supplier_id}', response_model=list[SupplierGoodInfo])
-# async def supplier_good(
-#     supplier_id: UUID,
-#     size: int,
-#     last_good_uuid: Optional[UUID] = None,
-#     data_service: GetDataService = Depends(get_data_service)
-# ):
-#     supplier_good = await data_service.get_supplier_goods(
-#         supplier_id=supplier_id,
-#         size=size,
-#         last_good_uuid=last_good_uuid
-#     )
-#     return [SupplierGoodInfo.parse_obj(good._asdict()) for good in supplier_good]
 
-# @router_supplier_get.get('/supplier/tag/{supplier_id}')
-# async def supplier_tag(
-#     supplier_id: UUID,
-#     service: GetDataService = Depends(get_data_service),
-# ):
-#     supplier_tag = await service.get_supplier_tag(supplier_id=supplier_id)
-#     return set([(item._asdict())['tag_name'] for item in supplier_tag])
+@router_supplier_get.get('/suppler/documents/{supplier_id}', response_model=SupplierDocuments)
+async def supplier_documents(
+    supplier_id: UUID,
+    data_service: GetDataService = Depends(get_data_service),
+):
+    documents = await data_service.get_supplier_documents(
+        supplier_id=supplier_id,
+    )
+    return SupplierDocuments.parse_obj(documents)
 
-# @router_supplier_get.post('/supplier/good/category/{supplier_id}')
-# async def get_supplier_good_by_category(
-#     supplier_id: UUID,
-#     size: int,
-#     last_good_id: Optional[UUID] = None,
-#     list_tags: GetSuppliersGoodResponse = ...,
-#     service: GetDataService = Depends(get_data_service),
-# ):
-#     goods = await service.get_good_by_category(
-#         supplier_id=supplier_id,
-#         tags_id = list_tags.tag_id,
-#         size=size,
-#         last_good_id = last_good_id
-#     )
-#     return "Ok"
+@router_supplier_get.get('/supplier/good/{supplier_id}', response_model=list[SupplierGoodInfo])
+async def supplier_good(
+    supplier_id: UUID,
+    size: int,
+    last_good_uuid: Optional[UUID] = None,
+    data_service: GetDataService = Depends(get_data_service)
+):
+    supplier_good = await data_service.get_supplier_goods(
+        supplier_id=supplier_id,
+        size=size,
+        last_good_uuid=last_good_uuid
+    )
+    return [SupplierGoodInfo.parse_obj(good._asdict()) for good in supplier_good]
+
+@router_supplier_get.get('/supplier/tag/{supplier_id}')
+async def supplier_categories(
+    supplier_id: UUID,
+    service: GetDataService = Depends(get_data_service),
+):
+    supplier_tags = await service.get_supplier_tag(supplier_id=supplier_id)
+    supplier_tags_models = []
+    tag_names = []
+    for item in supplier_tags:
+        tag_name = (item._asdict())['tag_name']
+        if tag_name not in tag_names:
+            model = SupplierTagResponse(
+                id=(item._asdict())['id'],
+                tag_name=(item._asdict())['tag_name'],
+            )
+            supplier_tags_models.append(model)
+            tag_names.append(tag_name)
+    return supplier_tags_models
+
+@router_supplier_get.post('/supplier/good/category/{supplier_id}')
+async def get_supplier_good_by_tag(
+    supplier_id: UUID,
+    list_tags: GetSuppliersGoodResponse = ...,
+    service: GetDataService = Depends(get_data_service),
+):
+    goods = await service.get_good_by_category(
+        supplier_id=supplier_id,
+        tags_id = list_tags.tag_id,
+    )
+    result = []
+    for good in goods:
+        result_good = SupplierGoodInfoResponse(
+            id=(good._asdict())['id'],
+            name=(good._asdict())['name'],
+            price=(good._asdict())['price'],
+            volume=(good._asdict())['volume'],
+        )
+        result.append(result_good)
+    return result

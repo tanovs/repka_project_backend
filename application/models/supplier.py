@@ -8,22 +8,38 @@ from sqlalchemy import Column, ForeignKey, LargeBinary, String, Table, Uuid
 from sqlalchemy.orm import relationship
 import sqlalchemy.dialects.postgresql as postgresql
 
-SupplierRegion = Table(
-    'supplier_region',
-    Base.metadata,
-    Column('id', postgresql.UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4, unique=True),
-    Column('supplier_id', ForeignKey('supplier.id')),
-    Column('region_id', ForeignKey('region.id')),
-)
+# SupplierRegion = Table(
+#     'supplier_region',
+#     Base.metadata,
+#     Column('id', postgresql.UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4, unique=True),
+#     Column('supplier_id', ForeignKey('supplier.id')),
+#     Column('region_id', ForeignKey('region.id')),
+# )
+
+class SupplierRegion(Base):
+    __tablename__ = 'supplier_region'
+
+    id = Column(postgresql.UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4, unique=True)
+    supplier_id = Column(postgresql.UUID(as_uuid=True), ForeignKey('supplier.id'), primary_key=True)
+    region_id = Column(postgresql.UUID(as_uuid=True), ForeignKey('region.id'), primary_key=True)
 
 
-SupplierCity = Table(
-    'supplier_city',
-    Base.metadata,
-    Column('id', postgresql.UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4, unique=True),
-    Column('supplier_id', ForeignKey('supplier.id')),
-    Column('city_id', ForeignKey('city.id')),
-)
+class SupplierCity(Base):
+    __tablename__ = 'supplier_city'
+    
+    id = Column(postgresql.UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4, unique=True)
+    supplier_id = Column(postgresql.UUID(as_uuid=True), ForeignKey('supplier.id'), primary_key=True)
+    city_id = Column(postgresql.UUID(as_uuid=True), ForeignKey('city.id'), primary_key=True)
+
+
+
+# SupplierCity = Table(
+#     'supplier_city',
+#     Base.metadata,
+#     Column('id', postgresql.UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4, unique=True),
+#     Column('supplier_id', ForeignKey('supplier.id')),
+#     Column('city_id', ForeignKey('city.id')),
+# )
 
 
 class Region(Base, UUIDMixin, TimeStampMixin):
@@ -33,7 +49,7 @@ class Region(Base, UUIDMixin, TimeStampMixin):
     city = relationship('City', back_populates='region')
     supplier = relationship(
         'Supplier',
-        secondary=SupplierRegion,
+        secondary=SupplierRegion.__table__,
         back_populates='delivery_region',
     )
 
@@ -46,7 +62,7 @@ class City(Base, UUIDMixin, TimeStampMixin):
     region = relationship('Region', back_populates='city')
     supplier = relationship(
         'Supplier',
-        secondary=SupplierCity,
+        secondary=SupplierCity.__table__,
         back_populates='delivery_city',
     )
 
@@ -65,12 +81,12 @@ class Supplier(Base, UUIDMixin, TimeStampMixin):
     company_logo = Column(LargeBinary) #Лого компании
     delivery_region = relationship(
         'Region',
-        secondary=SupplierRegion,
+        secondary=SupplierRegion.__table__,
         back_populates='supplier',
     )  # Регион доставки
     delivery_city = relationship(
         'City',
-        secondary=SupplierCity,
+        secondary=SupplierCity.__table__,
         back_populates='supplier',
     )  # Город доставки
     delivery_day_time = Column(String, nullable=False)  # Время и дни доставки

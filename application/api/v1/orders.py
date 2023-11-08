@@ -13,9 +13,9 @@ async def make_order(
     email_service: SendEmailService = Depends(get_send_email_service)
 ):
     info_id = await add_service.add_order_info(req)
-    email_service.send_email_horeca() // дописать
+    # email_service.send_email_horeca()
     for order in req.supplier_goods:
         await add_service.add_bucket(order, info_id)
-        email_service.send_email_supplier() // дописать
+        # email_service.send_email_supplier()
     return "OK"
     

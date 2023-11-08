@@ -49,12 +49,19 @@ async def shutdown():
 # status='false', message=details[0]["msg"]).json(),
 #     )
 
+app.include_router(tags.router, prefix='/api/v1', tags=['Ручки для получения городов, регионов, категорий и тэгов'])
+
 app.include_router(supplier.router_supplier_add, prefix='/api/v1', tags=['Ручки для экрана "Форма для поставщиков"'])
-# app.include_router(supplier.router_supplier_get, prefix='/api/v1', tags=['Ручки для экрана "Экран поставщика + экран товара"'])
-# app.include_router(good.router, prefix='/api/v1', tags=['good'])
-app.include_router(tags.router, prefix='/api/v1', tags=['tags'])
-# app.include_router(orders.router, prefix='/api/v1', tags=['Ручки для экрана "Сценарий заказа товара"'])
-# app.include_router(search.router, prefix='/api/v1', tags=['search'])
+app.include_router(good.router_add, prefix='/api/v1', tags=['Ручки для экрана "Форма для поставщиков"'])
+
+app.include_router(supplier.router_supplier_get, prefix='/api/v1', tags=['Ручки для экрана "Экран поставщика"'])
+app.include_router(good.router_get, prefix='/api/v1', tags=['Ручки для экрана "Экран товара"'])
+
+app.include_router(orders.router, prefix='/api/v1', tags=['Ручки для экрана "Сценарий заказа товара"'])
+
+app.include_router(search.router_main_screen, prefix='/api/v1', tags=['Ручки для экрана "Главный экран + поиск"'])
+app.include_router(search.search_by_supplier, prefix='/api/v1', tags=['Ручки для экрана "Главный экран + поиск (поиск по поставщикам)"'])
+app.include_router(search.search_by_good, prefix='/api/v1', tags=['Ручки для экрана "Главный экран + поиск (поиск по товарам)"'])
 
 if __name__ == '__main__':
     uvicorn.run('main:app', host='0.0.0.0', port=8080)

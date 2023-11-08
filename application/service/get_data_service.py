@@ -3,9 +3,9 @@ from dataclasses import dataclass
 
 from db.postgresql import get_postgres
 from fastapi import Depends
-from models.supplier import City, Region, Supplier
+from models.supplier import City, Region, Supplier, SupplierCity, SupplierRegion
 from models.good import Good, Tag, Category
-from sqlalchemy import Select, select
+from sqlalchemy import Select, select, or_
 from sqlalchemy.ext.asyncio import AsyncEngine, async_sessionmaker
 from typing import Optional
 from datetime import datetime
@@ -276,66 +276,134 @@ class GetDataService:
     async def get_supplier_tag(self, supplier_id: uuid.UUID):
         return (
             await self.select_data(
-                stmt = select(Tag.tag_name)
+                stmt = select(Tag.tag_name, Tag.id)
                 .join(Good)
                 .where(Good.supplier_id == supplier_id)
             )
         ).fetchall()
     
-    async def get_good_by_category(self, supplier_id: uuid.UUID, tags_id: list[uuid.UUID], size: int, last_good_id: Optional[uuid.UUID]):
-        if last_good_id:
-            return (
-                await self.select_data(
-                    stmt=select(
-                        Good.id,
-                        Good.name,
-                        Good.volume,
-                        Good.price,
-                        Good.photo
-                    )
-                    .where(Good.supplier_id==supplier_id, Good.tag_id.in_(tags_id), Good.id > last_good_id)
-                    .order_by(Good.tag_id)
-                    .limit(size)
-                )
-            ).fetchall()
+    async def get_good_by_category(self, supplier_id: uuid.UUID, tags_id: list[uuid.UUID]):
         return (
             await self.select_data(
                 stmt=select(
                     Good.id,
                     Good.name,
-                    Good.volume,
                     Good.price,
-                    Good.photo,
+                    Good.volume
                 )
                 .where(Good.supplier_id==supplier_id, Good.tag_id.in_(tags_id))
                 .order_by(Good.tag_id)
-                .limit(size)
             )
         ).fetchall()
     
-    async def get_all_suppliers(self, limit: int, last_date: Optional[datetime]):
-        if last_date:
-            return await self.select_data(
-                stmt=select(
-                    Supplier.id,
-                    Supplier.company_name,
-                    Supplier.estimated_delivery_time,
-                    Supplier.min_price
-                ).where(Supplier.created > last_date)
-                .order_by(Supplier.created)
-                .limit(limit)
-            ).fetchall()
+    async def get_all_suppliers(self):
+        stmt = select(
+            Supplier.id,
+            Supplier.company_name,
+            Supplier.estimated_delivery_time,
+            Supplier.min_price,
+        ).order_by(Supplier.company_name)
+        
+        return (await self.select_data(stmt=stmt)).fetchall()
+
+    
+    async def get_supplier_logo(self, supplier_id: uuid.UUID):
+        return (
+            await self.select_data(
+                stmt=select(Supplier.company_logo).where(Supplier.id==supplier_id)
+            )
+        ).fetchone()
+    
+    async def get_supplier_cover(self, supplier_id: uuid.UUID):
+        return (
+            await self.select_data(
+                stmt=select(Supplier.company_cover).where(Supplier.id==supplier_id)
+            )
+        ).fetchone()
+    
+    async def get_good_photo(self, good_id: uuid.UUID):
+        return (
+            await self.select_data(
+                stmt=select(Good.photo).where(Good.id==good_id)
+            )
+        ).fetchone()
+    
+    async def get_all_suppliers_and_goods(self, limit: int, company_name: Optional[str] = None):
+        if not company_name:
+            stmt = select(Supplier.id, Supplier.company_name).limit(limit)
         else:
-            return await self.select_data(
-                stmt=select(
-                    Supplier.id,
-                    Supplier.company_name,
-                    Supplier.estimated_delivery_time,
-                    Supplier.min_price
-                )
-                .order_by(Supplier.created)
-                .limit(limit)
-            ).fetchall()
+            stmt = select(Supplier.id, Supplier.company_name).where(Supplier.company_name > company_name).limit(limit)
+        suppliers = (await self.select_data(stmt=stmt)).fetchall()
+        return suppliers
+    
+    async def get_all_suppliers_by_params(self, like: str = None, params = None):
+        stmt = (
+            select(Supplier.id, Supplier.company_name, Supplier.estimated_delivery_time, Supplier.min_price)
+            .join(Good, Good.supplier_id==Supplier.id)
+            .join(Tag, Good.tag_id==Tag.id)
+            .join(Category, Tag.category_id==Category.id)
+            .join(SupplierRegion, SupplierRegion.supplier_id==Supplier.id)
+            .join(Region, Region.id==SupplierRegion.region_id)
+            .join(SupplierCity, SupplierCity.supplier_id==Supplier.id)
+            .join(City, City.id==SupplierCity.city_id)
+        )
+        if params:
+            if params.category_id:
+                stmt = stmt.filter(Category.id.in_(params.category_id))
+            if params.tag_id:
+                stmt = stmt.filter(Tag.id.in_(params.tag_id))
+            if params.city_id:
+                stmt = stmt.filter(City.id.in_(params.city_id))
+            if params.region_id:
+                stmt = stmt.filter(Region.id.in_(params.region_id))
+        if like:
+            stmt = stmt.filter(or_(Supplier.company_name.ilike(f'%{like}%'),
+                               Tag.tag_name.ilike(f'%{like}%'),
+                               Category.category_name.ilike(f'%{like}%')))
+        stmt = stmt.order_by(Supplier.company_name)
+        suppliers = (await self.select_data(stmt=stmt))
+        return suppliers.fetchall()
+    
+    async def get_all_goods(self):
+        stmt = select(
+            Supplier.id.label('supplier_id'),
+            Supplier.company_name,
+            Good.id.label('good_id'),
+            Good.name,
+            Good.volume,
+            Good.price,
+        ).join(Good, Good.supplier_id==Supplier.id).order_by(Supplier.company_name)
+        
+        return (await self.select_data(stmt=stmt)).fetchall()
+    
+    async def get_all_goods_by_params(self, like: str = None, params = None):
+        stmt = (
+            select(Supplier.id.label('supplier_id'), Supplier.company_name, Good.id.label('good_id'), Good.name, Good.volume, Good.price)
+            .join(Good, Good.supplier_id==Supplier.id)
+            .join(Tag, Good.tag_id==Tag.id)
+            .join(Category, Tag.category_id==Category.id)
+            .join(SupplierRegion, SupplierRegion.supplier_id==Supplier.id)
+            .join(Region, Region.id==SupplierRegion.region_id)
+            .join(SupplierCity, SupplierCity.supplier_id==Supplier.id)
+            .join(City, City.id==SupplierCity.city_id)
+        )
+        if params:
+            if params.category_id:
+                stmt = stmt.filter(Category.id.in_(params.category_id))
+            if params.tag_id:
+                stmt = stmt.filter(Tag.id.in_(params.tag_id))
+            if params.city_id:
+                stmt = stmt.filter(City.id.in_(params.city_id))
+            if params.region_id:
+                stmt = stmt.filter(Region.id.in_(params.region_id))
+        if like:
+            stmt = stmt.filter(or_(Good.name.ilike(f'%{like}%'),
+                                   Good.compound.ilike(f'%{like}%'),
+                                   Tag.tag_name.ilike(f'%{like}%'),
+                                   Category.category_name.ilike(f'%{like}%')))
+        stmt = stmt.order_by(Supplier.company_name)
+        goods = (await self.select_data(stmt=stmt))
+        return goods.fetchall()
 
 
 def get_data_service(

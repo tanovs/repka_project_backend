@@ -27,26 +27,3 @@ class AddGoodRequest(BaseModel):
 
     class Config:
         orm_mode = True
-
-
-class AddGoodResponse(BaseModel):
-    status: str
-    message: str
-    good_uuid: list[UUID]
-
-class GoodInfo(BaseModel):
-    name: str
-    price: str
-    volume: str
-    balance: str
-    calories: Optional[str]
-    compound: Optional[str]
-    expiration_day: Optional[str]
-    producer: Optional[str]
-    sample: Optional[bool]
-    sample_amount: Optional[int]
-
-class AddGoodPhotoResponse(BaseModel):
-    status: str
-    message: str
-    good_uuid: UUID
