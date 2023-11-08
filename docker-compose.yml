@@ -18,6 +18,14 @@ services:
     depends_on:
       - postgres
     restart: on-failure
+  
+  repka_backend:
+    build: ./repka_backend
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres
+    restart: on-failure
 
   # app:
   #   container_name: repka_frontend_dc
