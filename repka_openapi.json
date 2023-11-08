@@ -1,0 +1,854 @@
+    {
+        "openapi": "3.0.2",
+        "info": {
+            "title": "Read-only API for (repka).",
+            "version": "0.1.0"
+        },
+        "paths": {
+            "/api/v1/supplier/add": {
+                "post": {
+                    "tags": [
+                        "supplier"
+                    ],
+                    "summary": "Add Supplier",
+                    "operationId": "add_supplier_api_v1_supplier_add_post",
+                    "requestBody": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AddSupplierRequest"
+                                }
+                            }
+                        },
+                        "required": true
+                    },
+                    "responses": {
+                        "200": {
+                            "description": "Successful Response",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "$ref": "#/components/schemas/AddSupplierResponse"
+                                    }
+                                }
+                            }
+                        },
+                        "422": {
+                            "description": "Validation Error",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "$ref": "#/components/schemas/HTTPValidationError"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "/api/v1/suppler/contacts/{supplier_id}": {
+                "get": {
+                    "tags": [
+                        "supplier"
+                    ],
+                    "summary": "Supplier Contacts",
+                    "operationId": "supplier_contacts_api_v1_suppler_contacts__supplier_id__get",
+                    "parameters": [
+                        {
+                            "required": true,
+                            "schema": {
+                                "title": "Supplier Id",
+                                "type": "string"
+                            },
+                            "name": "supplier_id",
+                            "in": "path"
+                        }
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "Successful Response",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "$ref": "#/components/schemas/SupplierContacts"
+                                    }
+                                }
+                            }
+                        },
+                        "422": {
+                            "description": "Validation Error",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "$ref": "#/components/schemas/HTTPValidationError"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "/api/v1/supplier/delivery_info/{supplier_id}": {
+                "get": {
+                    "tags": [
+                        "supplier"
+                    ],
+                    "summary": "Supplier Delivery Info",
+                    "operationId": "supplier_delivery_info_api_v1_supplier_delivery_info__supplier_id__get",
+                    "parameters": [
+                        {
+                            "required": true,
+                            "schema": {
+                                "title": "Supplier Id",
+                                "type": "string"
+                            },
+                            "name": "supplier_id",
+                            "in": "path"
+                        }
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "Successful Response",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "$ref": "#/components/schemas/SupplierDeliveryInfo"
+                                    }
+                                }
+                            }
+                        },
+                        "422": {
+                            "description": "Validation Error",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "$ref": "#/components/schemas/HTTPValidationError"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "/api/v1/suppler/documents/{supplier_id}": {
+                "get": {
+                    "tags": [
+                        "supplier"
+                    ],
+                    "summary": "Supplier Contacts",
+                    "operationId": "supplier_contacts_api_v1_suppler_documents__supplier_id__get",
+                    "parameters": [
+                        {
+                            "required": true,
+                            "schema": {
+                                "title": "Supplier Id",
+                                "type": "string"
+                            },
+                            "name": "supplier_id",
+                            "in": "path"
+                        }
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "Successful Response",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "$ref": "#/components/schemas/SupplierDocuments"
+                                    }
+                                }
+                            }
+                        },
+                        "422": {
+                            "description": "Validation Error",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "$ref": "#/components/schemas/HTTPValidationError"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "/api/v1/good/add": {
+                "post": {
+                    "tags": [
+                        "good"
+                    ],
+                    "summary": "Add Good",
+                    "operationId": "add_good_api_v1_good_add_post",
+                    "requestBody": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AddGoodRequest"
+                                }
+                            }
+                        },
+                        "required": true
+                    },
+                    "responses": {
+                        "200": {
+                            "description": "Successful Response",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "$ref": "#/components/schemas/AddGoodResponse"
+                                    }
+                                }
+                            }
+                        },
+                        "422": {
+                            "description": "Validation Error",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "$ref": "#/components/schemas/HTTPValidationError"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "/api/v1/regions": {
+                "get": {
+                    "tags": [
+                        "tags"
+                    ],
+                    "summary": "Get Regions",
+                    "operationId": "get_regions_api_v1_regions_get",
+                    "responses": {
+                        "200": {
+                            "description": "Successful Response",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "$ref": "#/components/schemas/RegionTagResponse"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "/api/v1/cities": {
+                "get": {
+                    "tags": [
+                        "tags"
+                    ],
+                    "summary": "Get Cities",
+                    "operationId": "get_cities_api_v1_cities_get",
+                    "responses": {
+                        "200": {
+                            "description": "Successful Response",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "$ref": "#/components/schemas/CityTagResponse"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "/api/v1/good_category": {
+                "get": {
+                    "tags": [
+                        "tags"
+                    ],
+                    "summary": "Get Categories",
+                    "operationId": "get_categories_api_v1_good_category_get",
+                    "responses": {
+                        "200": {
+                            "description": "Successful Response",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "$ref": "#/components/schemas/CategoriesResponse"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "/api/v1/good_tag/{category_id}": {
+                "get": {
+                    "tags": [
+                        "tags"
+                    ],
+                    "summary": "Get Good Tag",
+                    "operationId": "get_good_tag_api_v1_good_tag__category_id__get",
+                    "parameters": [
+                        {
+                            "required": true,
+                            "schema": {
+                                "title": "Category Id",
+                                "type": "string",
+                                "format": "uuid"
+                            },
+                            "name": "category_id",
+                            "in": "path"
+                        }
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "Successful Response",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "$ref": "#/components/schemas/TagResponse"
+                                    }
+                                }
+                            }
+                        },
+                        "422": {
+                            "description": "Validation Error",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "$ref": "#/components/schemas/HTTPValidationError"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "components": {
+            "schemas": {
+                "AddGood": {
+                    "title": "AddGood",
+                    "required": [
+                        "name",
+                        "price",
+                        "limit",
+                        "volume",
+                        "calories",
+                        "compound",
+                        "expiration_day",
+                        "category",
+                        "tag"
+                    ],
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "title": "Name",
+                            "type": "string"
+                        },
+                        "photo": {
+                            "title": "Photo",
+                            "type": "string",
+                            "format": "binary"
+                        },
+                        "price": {
+                            "title": "Price",
+                            "type": "string"
+                        },
+                        "limit": {
+                            "title": "Limit",
+                            "type": "string"
+                        },
+                        "volume": {
+                            "title": "Volume",
+                            "type": "string"
+                        },
+                        "calories": {
+                            "title": "Calories",
+                            "type": "string"
+                        },
+                        "compound": {
+                            "title": "Compound",
+                            "type": "string"
+                        },
+                        "expiration_day": {
+                            "title": "Expiration Day",
+                            "type": "string"
+                        },
+                        "category": {
+                            "title": "Category",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "tag": {
+                            "title": "Tag",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "AddGoodRequest": {
+                    "title": "AddGoodRequest",
+                    "required": [
+                        "supplier_id",
+                        "goods"
+                    ],
+                    "type": "object",
+                    "properties": {
+                        "supplier_id": {
+                            "title": "Supplier Id",
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "goods": {
+                            "title": "Goods",
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/schemas/AddGood"
+                            }
+                        }
+                    }
+                },
+                "AddGoodResponse": {
+                    "title": "AddGoodResponse",
+                    "required": [
+                        "status",
+                        "message",
+                        "good_uuid"
+                    ],
+                    "type": "object",
+                    "properties": {
+                        "status": {
+                            "title": "Status",
+                            "type": "string"
+                        },
+                        "message": {
+                            "title": "Message",
+                            "type": "string"
+                        },
+                        "good_uuid": {
+                            "title": "Good Uuid",
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "format": "uuid"
+                            }
+                        }
+                    }
+                },
+                "AddSupplierRequest": {
+                    "title": "AddSupplierRequest",
+                    "required": [
+                        "company_name",
+                        "contact_name",
+                        "phone_number",
+                        "email",
+                        "company_adress"
+                    ],
+                    "type": "object",
+                    "properties": {
+                        "company_name": {
+                            "title": "Company Name",
+                            "type": "string"
+                        },
+                        "contact_name": {
+                            "title": "Contact Name",
+                            "type": "string"
+                        },
+                        "phone_number": {
+                            "title": "Phone Number",
+                            "type": "string"
+                        },
+                        "email": {
+                            "title": "Email",
+                            "type": "string"
+                        },
+                        "company_adress": {
+                            "title": "Company Adress",
+                            "type": "string"
+                        },
+                        "website": {
+                            "title": "Website",
+                            "type": "string"
+                        },
+                        "social_network": {
+                            "title": "Social Network",
+                            "type": "string"
+                        },
+                        "delivery_region": {
+                            "title": "Delivery Region",
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "format": "uuid"
+                            }
+                        },
+                        "delivery_city": {
+                            "title": "Delivery City",
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "format": "uuid"
+                            }
+                        },
+                        "delivery_time": {
+                            "title": "Delivery Time",
+                            "type": "string"
+                        },
+                        "delivery_day": {
+                            "title": "Delivery Day",
+                            "type": "string"
+                        },
+                        "min_price": {
+                            "title": "Min Price",
+                            "type": "string"
+                        },
+                        "OOO": {
+                            "title": "Ooo",
+                            "type": "string"
+                        },
+                        "OGRN": {
+                            "title": "Ogrn",
+                            "type": "string"
+                        },
+                        "INN": {
+                            "title": "Inn",
+                            "type": "string"
+                        },
+                        "bank_account": {
+                            "title": "Bank Account",
+                            "type": "string"
+                        },
+                        "certificate": {
+                            "title": "Certificate",
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/schemas/Certificate"
+                            }
+                        }
+                    }
+                },
+                "AddSupplierResponse": {
+                    "title": "AddSupplierResponse",
+                    "required": [
+                        "status",
+                        "message",
+                        "supplier_uuid"
+                    ],
+                    "type": "object",
+                    "properties": {
+                        "status": {
+                            "title": "Status",
+                            "type": "string"
+                        },
+                        "message": {
+                            "title": "Message",
+                            "type": "string"
+                        },
+                        "supplier_uuid": {
+                            "title": "Supplier Uuid",
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                },
+                "CategoriesResponse": {
+                    "title": "CategoriesResponse",
+                    "required": [
+                        "categories"
+                    ],
+                    "type": "object",
+                    "properties": {
+                        "categories": {
+                            "title": "Categories",
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/schemas/Category"
+                            }
+                        }
+                    }
+                },
+                "Category": {
+                    "title": "Category",
+                    "required": [
+                        "id",
+                        "category_name"
+                    ],
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "title": "Id",
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "category_name": {
+                            "title": "Category Name",
+                            "type": "string"
+                        }
+                    }
+                },
+                "Certificate": {
+                    "title": "Certificate",
+                    "type": "object",
+                    "properties": {
+                        "photo": {
+                            "title": "Photo",
+                            "type": "string",
+                            "format": "binary"
+                        },
+                        "url": {
+                            "title": "Url",
+                            "type": "string"
+                        }
+                    }
+                },
+                "CityTag": {
+                    "title": "CityTag",
+                    "required": [
+                        "id",
+                        "city_name"
+                    ],
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "title": "Id",
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "city_name": {
+                            "title": "City Name",
+                            "type": "string"
+                        }
+                    }
+                },
+                "CityTagResponse": {
+                    "title": "CityTagResponse",
+                    "required": [
+                        "cities"
+                    ],
+                    "type": "object",
+                    "properties": {
+                        "cities": {
+                            "title": "Cities",
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/schemas/CityTag"
+                            }
+                        }
+                    }
+                },
+                "GoodTag": {
+                    "title": "GoodTag",
+                    "required": [
+                        "id",
+                        "tag_name"
+                    ],
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "title": "Id",
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "tag_name": {
+                            "title": "Tag Name",
+                            "type": "string"
+                        }
+                    }
+                },
+                "HTTPValidationError": {
+                    "title": "HTTPValidationError",
+                    "type": "object",
+                    "properties": {
+                        "detail": {
+                            "title": "Detail",
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/schemas/ValidationError"
+                            }
+                        }
+                    }
+                },
+                "RegionTag": {
+                    "title": "RegionTag",
+                    "required": [
+                        "id",
+                        "region_name"
+                    ],
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "title": "Id",
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "region_name": {
+                            "title": "Region Name",
+                            "type": "string"
+                        }
+                    }
+                },
+                "RegionTagResponse": {
+                    "title": "RegionTagResponse",
+                    "required": [
+                        "regions"
+                    ],
+                    "type": "object",
+                    "properties": {
+                        "regions": {
+                            "title": "Regions",
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/schemas/RegionTag"
+                            }
+                        }
+                    }
+                },
+                "SupplierContacts": {
+                    "title": "SupplierContacts",
+                    "required": [
+                        "contact_name",
+                        "company_address",
+                        "phone_number",
+                        "email",
+                        "website",
+                        "social_network"
+                    ],
+                    "type": "object",
+                    "properties": {
+                        "contact_name": {
+                            "title": "Contact Name",
+                            "type": "string"
+                        },
+                        "company_address": {
+                            "title": "Company Address",
+                            "type": "string"
+                        },
+                        "phone_number": {
+                            "title": "Phone Number",
+                            "type": "string"
+                        },
+                        "email": {
+                            "title": "Email",
+                            "type": "string"
+                        },
+                        "website": {
+                            "title": "Website",
+                            "type": "string"
+                        },
+                        "social_network": {
+                            "title": "Social Network",
+                            "type": "string"
+                        }
+                    }
+                },
+                "SupplierDeliveryInfo": {
+                    "title": "SupplierDeliveryInfo",
+                    "required": [
+                        "city_name",
+                        "delivery_day",
+                        "delivery_time",
+                        "min_price"
+                    ],
+                    "type": "object",
+                    "properties": {
+                        "city_name": {
+                            "title": "City Name",
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "delivery_day": {
+                            "title": "Delivery Day",
+                            "type": "string"
+                        },
+                        "delivery_time": {
+                            "title": "Delivery Time",
+                            "type": "string"
+                        },
+                        "min_price": {
+                            "title": "Min Price",
+                            "type": "string"
+                        }
+                    }
+                },
+                "SupplierDocuments": {
+                    "title": "SupplierDocuments",
+                    "required": [
+                        "OOO",
+                        "OGRN",
+                        "INN",
+                        "bank_account"
+                    ],
+                    "type": "object",
+                    "properties": {
+                        "OOO": {
+                            "title": "Ooo",
+                            "type": "string"
+                        },
+                        "OGRN": {
+                            "title": "Ogrn",
+                            "type": "string"
+                        },
+                        "INN": {
+                            "title": "Inn",
+                            "type": "string"
+                        },
+                        "bank_account": {
+                            "title": "Bank Account",
+                            "type": "string"
+                        }
+                    }
+                },
+                "TagResponse": {
+                    "title": "TagResponse",
+                    "required": [
+                        "good_tag"
+                    ],
+                    "type": "object",
+                    "properties": {
+                        "good_tag": {
+                            "title": "Good Tag",
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/schemas/GoodTag"
+                            }
+                        }
+                    }
+                },
+                "ValidationError": {
+                    "title": "ValidationError",
+                    "required": [
+                        "loc",
+                        "msg",
+                        "type"
+                    ],
+                    "type": "object",
+                    "properties": {
+                        "loc": {
+                            "title": "Location",
+                            "type": "array",
+                            "items": {
+                                "anyOf": [
+                                    {
+                                        "type": "string"
+                                    },
+                                    {
+                                        "type": "integer"
+                                    }
+                                ]
+                            }
+                        },
+                        "msg": {
+                            "title": "Message",
+                            "type": "string"
+                        },
+                        "type": {
+                            "title": "Error Type",
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    }
