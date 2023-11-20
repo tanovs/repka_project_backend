@@ -3,6 +3,7 @@ services:
   postgres:
     image: postgres:13.3
     env_file: ./env/postgres/.env
+    user: repka
     ports:
       - 5432:5432
     restart: on-failure
