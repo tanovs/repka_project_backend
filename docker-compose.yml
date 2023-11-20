@@ -23,6 +23,8 @@ services:
     build: ./repka_backend
     ports:
       - 8080:8080
+    env_file:
+      - ./env/repka_backend/.env
     depends_on:
       - postgres
     restart: on-failure
