@@ -134,3 +134,4 @@ test.xlsx
 Ubuntu-Standard-2-8-50GB-bz3jjnlG.pem
 *.jpg
 venv/*
+test_data/*

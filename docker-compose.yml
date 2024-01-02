@@ -10,6 +10,9 @@ services:
       test: [ "CMD-SHELL", "pg_isready -d repka_database -U repka" ]
       interval: 10s
       timeout: 10s
+    volumes:
+      - ./postgres/dump_09032023.sql:/docker-entrypoint-initdb.d/dump_09032023.sql
+      - postgres_data:/var/lib/postgresql/data
 
   repka_admin:
     build: ./repka_admin
