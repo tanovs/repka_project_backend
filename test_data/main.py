@@ -19,22 +19,22 @@ def get_good_data_vkusnie_istoryy(supplier: str):
     brand = "FresCo"
     supplier_id = supplier
     tag_id = [
-        "c2965a8f-f02d-4eaf-9a0d-ed849dc760de",
-        "f4fcaf48-dd0b-4143-96d2-f771c8e70cc3",
-        "f4fcaf48-dd0b-4143-96d2-f771c8e70cc3",
-        "22405983-8737-4ef2-923f-fb3e74ebd3bb",
-        "22405983-8737-4ef2-923f-fb3e74ebd3bb",
-        "22405983-8737-4ef2-923f-fb3e74ebd3bb",
-        "22405983-8737-4ef2-923f-fb3e74ebd3bb",
-        "9e4461b0-a7dd-41ca-9ef3-7335a91c4470",
-        "22405983-8737-4ef2-923f-fb3e74ebd3bb",
-        "9e4461b0-a7dd-41ca-9ef3-7335a91c4470",
-        "9e4461b0-a7dd-41ca-9ef3-7335a91c4470",
-        "9e4461b0-a7dd-41ca-9ef3-7335a91c4470",
-        "9e4461b0-a7dd-41ca-9ef3-7335a91c4470",
-        "9e4461b0-a7dd-41ca-9ef3-7335a91c4470",
-        "9e4461b0-a7dd-41ca-9ef3-7335a91c4470",
-        "9e4461b0-a7dd-41ca-9ef3-7335a91c4470",
+        "a0c0dc81-f076-4b06-9922-d290c6a4c800",
+        "79612acf-10e4-43e9-b087-410042d00dc3",
+        "79612acf-10e4-43e9-b087-410042d00dc3",
+        "2d3a2803-3dd8-43a3-8a88-596d45c3d7d7",
+        "2d3a2803-3dd8-43a3-8a88-596d45c3d7d7",
+        "2d3a2803-3dd8-43a3-8a88-596d45c3d7d7",
+        "2d3a2803-3dd8-43a3-8a88-596d45c3d7d7",
+        "40dcf6b8-c3f7-4f42-905c-c5a12178741b",
+        "2d3a2803-3dd8-43a3-8a88-596d45c3d7d7",
+        "40dcf6b8-c3f7-4f42-905c-c5a12178741b",
+        "40dcf6b8-c3f7-4f42-905c-c5a12178741b",
+        "40dcf6b8-c3f7-4f42-905c-c5a12178741b",
+        "40dcf6b8-c3f7-4f42-905c-c5a12178741b",
+        "40dcf6b8-c3f7-4f42-905c-c5a12178741b",
+        "40dcf6b8-c3f7-4f42-905c-c5a12178741b",
+        "40dcf6b8-c3f7-4f42-905c-c5a12178741b",
     ]
     body = AddGoodRequest(supplier_id=supplier_id, goods=[])
     for i in range(0, 16):
@@ -63,11 +63,11 @@ def get_good_data_zagotprom(supplier: str):
     brand = "Zagotprom"
     supplier_id = supplier
     tag_id = [
-        "e0c8e945-c75f-426e-bb19-745f990c7934",
-        "e0c8e945-c75f-426e-bb19-745f990c7934",
-        "e0c8e945-c75f-426e-bb19-745f990c7934",
-        "79151bd8-bf18-4a55-b2c3-59599a41cdf3",
-        "f4fcaf48-dd0b-4143-96d2-f771c8e70cc3",
+        "79612acf-10e4-43e9-b087-410042d00dc3",
+        "79612acf-10e4-43e9-b087-410042d00dc3",
+        "79612acf-10e4-43e9-b087-410042d00dc3",
+        "62c475cb-d52c-4543-b38d-c1201223eb17",
+        "62c475cb-d52c-4543-b38d-c1201223eb17",
     ]
     body = AddGoodRequest(supplier_id=supplier_id, goods=[])
     for i in range(0, 5):
@@ -94,7 +94,7 @@ def get_good_data_ferro(supplier: str):
     expiration_day = "от 14 до 30 суток (+2..+4)"
     brand = "Ferro"
     supplier_id = supplier
-    tag_id = "7165c2da-3926-4f04-b538-465f63bd2c71"
+    tag_id = "b0bcc74b-7575-460c-b460-52cd616fb685"
     body = AddGoodRequest(supplier_id=supplier_id, goods=[])
     for i in range(0, 5):
         good = AddGood(

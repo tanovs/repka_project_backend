@@ -42,7 +42,7 @@ services:
     container_name: repka_frontend_dc
     image: repka-frontend-docker
     build:
-      context: /opt/repka_project_frontend/application
+      context: /opt/repka_test/repka_project_frontend
     ports:
       - 8001:8001
       - 443:443
