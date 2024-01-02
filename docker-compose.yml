@@ -45,6 +45,8 @@ services:
       context: /opt/repka_project_frontend/application
     ports:
       - 8001:8001
+      - 80:80
+      - 443:443
     depends_on:
       - nginx
     restart: on-failure
